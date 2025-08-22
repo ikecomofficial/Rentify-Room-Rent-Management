@@ -1,7 +1,4 @@
-# [ ] Room Rent Management App
-
-[ ] Add app logo / banner here
-
+# Rentify: Room Rent Management App
 ---
 
 ## 📌 Overview
@@ -56,5 +53,3 @@ It helps property owners manage multiple properties, rooms, tenants, and rent/bi
 
 ## 🛠️ Installation & Setup
 1. Clone this repository:
-   ```bash
-   git clone https://github.com/[your-username]/[your-repo-name].git
