@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Rentify - Room Rent Management</string>
+    <string name="text_sign_in_with_google">Sign In With Google</string>
+    <string name="text_account_setting">Account Setting</string>
+    <string name="text_display_name">"Rahul Raj"</string>
+    <string name="text_email_label">"E-mail"</string>
+    <string name="text_display_email">"rahulraj@gmail.com"</string>
+    <string name="text_logout">Logout</string>
+    <string name="text_app_version">v1.0.2</string>
+    <string name="text_my_properties">My Properties</string>
+    <string name="text_plus_add_property">+ Add Property</string>
+    <string name="text_property_name_asterisk">Property Name *</string>
+    <string name="text_property_name">Property Name</string>
+    <string name="text_address_city_asterisk">Address/City *</string>
+    <string name="text_address_city">Address/City</string>
+    <string name="text_default_rent">Default Rent Amount *</string>
+    <string name="text_rent_amount">Enter Rent Amount</string>
+    <string name="text_property_location">Property Location</string>
+    <string name="text_0">0</string>
+    <string name="text_total_shops">Total Shops *</string>
+    <string name="text_total_rooms">Total Rooms *</string>
+    <string name="text_create_property">Create Property</string>
+    <string name="text_electricity_unit_rate">Electricity Unit Rate *</string>
+    <string name="text_room_01">Room 01</string>
+    <string name="text_rupee_symbol">₹</string>
+    <string name="text_rent_2500">2,500</string>
+    <string name="text_tenant_name">Tenant Name</string>
+    <string name="text_status_paid">Paid</string>
+    <string name="text_date_time">19 Aug 2025, 04:34PM</string>
+    <string name="text_phone_number">+91 9649770970</string>
+    <string name="text_edit_property">Edit Property</string>
+    <string name="text_delete_property">Delete Property</string>
+</resources>

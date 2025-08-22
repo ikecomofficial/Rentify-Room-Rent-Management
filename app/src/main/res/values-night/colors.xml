@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="acc_setting_labels">#7C7C7C</color>
+    <color name="black_900">#bcbcbc</color>
+    <color name="black">#FFFFFF</color>
+    <color name="purple_700">#1b6a68</color>
+    <color name="purple_200">#8db4b3</color>
+    <color name="purple_100">#1D1D20</color>
+    <color name="bg_white">#111416</color>
+    <color name="bg_orange">#6D461C</color>
+    <color name="light_gray_bg">#222529</color>
+    <color name="grey_500">#C8C8C8</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="grey_700">#A9A9A9</color>
+    <color name="icon_grey">#D9D9D9</color>
+    <color name="light_separator">#E0E0E0</color>
+    <color name="green_700_status">#80c080</color>
+
+
+</resources>

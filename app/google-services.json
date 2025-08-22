@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "871838733408",
+    "firebase_url": "https://rentify---room-rent-management-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "rentify---room-rent-management",
+    "storage_bucket": "rentify---room-rent-management.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871838733408:android:ff9a8569ee8c5da1e7df05",
+        "android_client_info": {
+          "package_name": "com.example.rentify_roomrentmanagement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "871838733408-du0e3qtnnvht8703rj7h7i5sulm9jdir.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.rentify_roomrentmanagement",
+            "certificate_hash": "16d32c869dc1d3fde42af919fbeb744af0d3b423"
+          }
+        },
+        {
+          "client_id": "871838733408-l70m8ncgohj1amjsaef01pparq6kcej0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDi9mBRMS0WlkQzHpQCpSod1ItEmkgbRA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "871838733408-l70m8ncgohj1amjsaef01pparq6kcej0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
