@@ -12,7 +12,7 @@
     <string name="text_property_name_asterisk">Property Name *</string>
     <string name="text_property_name">Property Name</string>
     <string name="text_address_city_asterisk">Address/City *</string>
-    <string name="text_address_city">Address/City</string>
+    <string name="text_address_city">Address/City *</string>
     <string name="text_default_rent">Default Rent Amount *</string>
     <string name="text_rent_amount">Enter Rent Amount</string>
     <string name="text_property_location">Property Location</string>

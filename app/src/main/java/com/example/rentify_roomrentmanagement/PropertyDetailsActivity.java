@@ -33,6 +33,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -89,8 +91,6 @@ public class PropertyDetailsActivity extends AppCompatActivity {
             startActivity(roomDetailsIntent);
         });
         roomsRecyclerView.setAdapter(roomCardAdapter);
-
-
         propertiesReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -118,72 +118,69 @@ public class PropertyDetailsActivity extends AppCompatActivity {
 
             }
         });
-
         loadRooms();
-
     }
 
     private void loadRooms() {
         roomsReference.orderByChild("property_id").equalTo(property_id)
                 .addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot roomsSnapshot) {
-                roomsList.clear();
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot roomsSnapshot) {
+                        roomsList.clear();
 
-                for (DataSnapshot roomSnap : roomsSnapshot.getChildren()) {
-                    String roomId = roomSnap.getKey();
-                    String roomName = roomSnap.child("room_name").getValue(String.class);
-                    Integer rentAmount = roomSnap.child("room_rent").getValue(Integer.class);
-                    Boolean isOccupied = roomSnap.child("is_occupied").getValue(Boolean.class);
-                    String tenantId = roomSnap.child("tenant_id").getValue(String.class);
+                        for (DataSnapshot roomSnap : roomsSnapshot.getChildren()) {
+                            String roomId = roomSnap.getKey();
+                            String roomName = roomSnap.child("room_name").getValue(String.class);
+                            Integer rentAmount = roomSnap.child("room_rent").getValue(Integer.class);
+                            Boolean isOccupied = roomSnap.child("is_occupied").getValue(Boolean.class);
+                            String tenantId = roomSnap.child("tenant_id").getValue(String.class);
+                            Integer roomNo = roomSnap.child("room_no").getValue(Integer.class);
 
-                    Rooms model = new Rooms();
-                    model.setRoom_id(roomId);
-                    model.setRoom_name(roomName);
-                    model.setRoom_rent(rentAmount != null ? rentAmount : 0);
-                    model.setIs_occupied(isOccupied != null && isOccupied);
+                            Rooms model = new Rooms();
+                            model.setRoom_id(roomId);
+                            model.setRoom_name(roomName);
+                            model.setRoom_rent(rentAmount != null ? rentAmount : 0);
+                            model.setIs_occupied(isOccupied != null && isOccupied);
+                            model.setRoom_no(roomNo != null ? roomNo : 0);
 
-                    if (tenantId != null && !tenantId.equals("null") && !tenantId.isEmpty()) {
-                        tenantReference.child(tenantId).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot tenantSnap) {
-                                if (tenantSnap.exists()) {
-                                    model.setTenant_id(tenantId);
-                                    model.setTenant_name(tenantSnap.child("tenant_name").getValue(String.class));
-                                    model.setTenant_phone(tenantSnap.child("tenant_phone").getValue(String.class));
-                                    model.setThumb_tenant_url(tenantSnap.child("thumb_tenant_url").getValue(String.class));
-                                } else {
-                                    // default tenant values
-                                    model.setTenant_name("No Tenant");
-                                    model.setTenant_phone("");
-                                    model.setThumb_tenant_url(null);
-                                }
+                            if (tenantId != null && !tenantId.equals("null") && !tenantId.isEmpty()) {
+                                tenantReference.child(tenantId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot tenantSnap) {
+                                        if (tenantSnap.exists()) {
+                                            model.setTenant_id(tenantId);
+                                            model.setTenant_name(tenantSnap.child("tenant_name").getValue(String.class));
+                                            model.setTenant_phone(tenantSnap.child("tenant_phone").getValue(String.class));
+                                            model.setThumb_tenant_url(tenantSnap.child("thumb_tenant_url").getValue(String.class));
+                                        } else {
+                                            model.setTenant_name("No Tenant");
+                                            model.setTenant_phone("");
+                                            model.setThumb_tenant_url(null);
+                                        }
+                                        roomsList.add(model);
+                                        // 🔥 sort by room_name (numeric if possible)
+                                        roomsList.sort(Comparator.comparingInt(Rooms::getRoom_no));
+                                        roomCardAdapter.notifyDataSetChanged();
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {}
+                                });
 
+                            } else {
+                                model.setTenant_name("No Tenant");
+                                model.setTenant_phone("");
+                                model.setThumb_tenant_url(null);
                                 roomsList.add(model);
+                                // 🔥 sort by room_name (numeric if possible)
+                                roomsList.sort(Comparator.comparingInt(Rooms::getRoom_no));
                                 roomCardAdapter.notifyDataSetChanged();
                             }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {}
-                        });
-                    } else {
-                        // no tenant assigned
-                        model.setTenant_name("No Tenant");
-                        model.setTenant_phone("");
-                        model.setThumb_tenant_url(null);
-
-                        roomsList.add(model);
-                        roomCardAdapter.notifyDataSetChanged();
+                        }
                     }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {}
+                });
     }
-
-
     private void deletePropertyFromFirebase(){
 
         // Query all rooms

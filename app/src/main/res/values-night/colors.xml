@@ -15,6 +15,7 @@
     <color name="icon_grey">#D9D9D9</color>
     <color name="light_separator">#E0E0E0</color>
     <color name="green_700_status">#80c080</color>
+    <color name="toggle_grey">#D9D9D9</color>
 
 
 </resources>

@@ -24,4 +24,5 @@
     <color name="grey_700">#333333</color>
     <color name="light_separator">#D5D5D5</color>
     <color name="green_700_status">#CB5CAF6E</color>
+    <color name="toggle_grey">#FF018786</color>
 </resources>

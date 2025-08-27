@@ -1,10 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddTenantActivity">
+    android:fillViewport="true">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:id="@+id/tvAddPropertySubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Please Fill In Tenant Details"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="15sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="30dp"
+            android:background="@drawable/bg_add_prop_form"
+            android:elevation="4dp"
+            android:layout_marginHorizontal="10dp">
+
+            <!-- Tenant Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:text="Tenant Name *"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/gpt_edittext_bg">
+
+                <ImageView
+                    android:id="@+id/icon_profile"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:src="@drawable/ic_person"
+                    app:tint="@color/icon_grey" />
+
+                <EditText
+                    android:id="@+id/editTextTenantName"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/icon_profile"
+                    android:background="@drawable/gpt_edittext_bg"
+                    android:hint="Enter Tenant Name"
+                    android:inputType="textCapWords"
+                    android:padding="10dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/grey_500" />
+            </RelativeLayout>
+
+
+            <!-- Tenant Number -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:text="Mobile No."
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/gpt_edittext_bg">
+
+                <ImageView
+                    android:id="@+id/icon_phone"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:src="@drawable/ic_phone"
+                    app:tint="@color/icon_grey" />
+
+                <EditText
+                    android:id="@+id/editTextTenantPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/icon_phone"
+                    android:background="@drawable/gpt_edittext_bg"
+                    android:hint="Enter 10 Digit Number (optional)"
+                    android:inputType="number"
+                    android:padding="10dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/grey_500" />
+            </RelativeLayout>
+
+            <!-- Tenant Address -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:text="@string/text_address_city"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/gpt_edittext_bg">
+
+                <ImageView
+                    android:id="@+id/icon_location"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:src="@drawable/ic_home_location"
+                    app:tint="@color/icon_grey" />
+
+                <EditText
+                    android:id="@+id/editTextTenantAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/icon_location"
+                    android:background="@drawable/gpt_edittext_bg"
+                    android:hint="Enter Address"
+                    android:inputType="textCapWords"
+                    android:padding="10dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/grey_500" />
+            </RelativeLayout>
+
+            <!-- Add Tenant Button -->
+            <TextView
+                android:id="@+id/btnAddTenant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add Tenant"
+                android:paddingVertical="10dp"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:textColor="@color/purple_500"
+                android:background="@drawable/gpt_bg_chip"/>
+
+
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -317,7 +316,7 @@
                     android:layout_toEndOf="@id/icon_electricity"
                     android:background="@drawable/gpt_edittext_bg"
                     android:hint="₹ per unit"
-                    android:inputType="numberDecimal"
+                    android:inputType="number"
                     android:padding="10dp"
                     android:textColor="@color/black"
                     android:textColorHint="@color/grey_500" />

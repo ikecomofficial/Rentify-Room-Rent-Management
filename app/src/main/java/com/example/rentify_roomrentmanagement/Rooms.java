@@ -3,14 +3,14 @@ package com.example.rentify_roomrentmanagement;
 public class Rooms {
 
     public String room_id, room_name, tenant_name, tenant_phone, thumb_tenant_url, tenant_id;
-    public int room_rent;
+    public int room_rent, room_no;
     public boolean is_occupied, is_rent_paid;
 
     public Rooms(){
 
     }
 
-    public Rooms(String room_id, String room_name, String tenant_id, String tenant_name, String tenant_phone, String thumb_tenant_url,
+    public Rooms(String room_id, String room_name, int room_no, String tenant_id, String tenant_name, String tenant_phone, String thumb_tenant_url,
                  int room_rent, boolean is_occupied, boolean is_rent_paid) {
         this.room_id = room_id;
         this.room_name = room_name;
@@ -21,6 +21,7 @@ public class Rooms {
         this.tenant_id = tenant_id;
         this.is_occupied = is_occupied;
         this.is_rent_paid = is_rent_paid;
+        this.room_no = room_no;
     }
 
     public String getRoom_id() {
@@ -37,6 +38,14 @@ public class Rooms {
 
     public void setRoom_name(String room_name) {
         this.room_name = room_name;
+    }
+
+    public int getRoom_no() {
+        return room_no;
+    }
+
+    public void setRoom_no(int room_no) {
+        this.room_no = room_no;
     }
 
     public String getTenant_id() {

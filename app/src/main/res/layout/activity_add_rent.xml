@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Rent Record"
+                android:textColor="@color/black"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvAddPropertySubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Please add rent paid by the tenant"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="15sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="30dp"
+            android:background="@drawable/bg_add_prop_form"
+            android:elevation="4dp"
+            android:layout_marginHorizontal="10dp">
+
+            <!-- Property Name -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:text="Rent Amount Paid *"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/gpt_edittext_bg">
+
+                <ImageView
+                    android:id="@+id/icon_property"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:src="@drawable/ic_rupee_symbol"
+                    app:tint="@color/icon_grey" />
+
+                <EditText
+                    android:id="@+id/etRentAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/icon_property"
+                    android:background="@drawable/gpt_edittext_bg"
+                    android:hint="Enter Rent Amount"
+                    android:inputType="number"
+                    android:padding="10dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/grey_500" />
+            </RelativeLayout>
+
+
+            <!-- Address/City -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:text="Payment Mode *"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+                <!-- Payment Mode Selector -->
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/togglePaymentMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+                    android:layout_marginBottom="16dp"
+                    app:checkedButton="@+id/btnCashSelection">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCashSelection"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cash"
+                        android:textAllCaps="false"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnOnlineSelection"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Online"
+                        android:textAllCaps="false"/>
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <!-- Address/City -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:text="Date &amp; Time Of Payment *"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- Row: Text + Toggle -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="2dp">
+
+                <TextView
+                    android:id="@+id/tvCustomDateTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Choose Custom Date &amp; Time"
+                    android:textSize="16sp"
+                    android:textColor="@color/grey_700" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchCustomDateTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:thumbTint="@color/toggle_grey"
+                    android:checked="false" />
+
+            </LinearLayout>
+
+            <!-- Row: Date & Time pickers -->
+            <LinearLayout
+                android:id="@+id/layoutDateTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:weightSum="2"
+                android:visibility="gone">
+
+                <!-- Date Picker -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCustomDateSelector"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:strokeColor="@color/bg_orange"
+                    app:strokeWidth="0.5dp"
+                    android:paddingVertical="12dp"
+                    android:textColor="@color/black"
+                    app:icon="@drawable/ic_calendar_start_date2"
+                    app:iconTint="@color/grey_700"
+                    android:textAllCaps="false"
+                    android:text="23 Aug 2025" />
+
+                <!-- Time Picker -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCustomTimeSelector"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    app:strokeColor="@color/bg_orange"
+                    app:strokeWidth="0.5dp"
+                    android:paddingVertical="12dp"
+                    android:textColor="@color/black"
+                    app:iconTint="@color/grey_700"
+                    app:icon="@drawable/ic_clock"
+                    android:text="02:15 PM" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="(By default, current date &amp; time are applied)"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="25dp"/>
+            <!-- Create Property Button -->
+            <TextView
+                android:id="@+id/btnSaveRent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save Rent"
+                android:paddingVertical="10dp"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:textColor="@color/purple_500"
+                android:background="@drawable/gpt_bg_chip"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
