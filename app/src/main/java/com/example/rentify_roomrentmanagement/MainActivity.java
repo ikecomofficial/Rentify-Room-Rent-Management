@@ -2,12 +2,14 @@ package com.example.rentify_roomrentmanagement;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -24,6 +26,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -35,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private RecyclerView propertyList;
+    private TextView tvNoPropertyList;
+    private ProgressBar progressBarProperties;
+    private ExtendedFloatingActionButton fabAddProperty;
     private DatabaseReference propertiesReference;
 
     @Override
@@ -48,11 +54,14 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        fabAddProperty = findViewById(R.id.fabAddProperty);
+        progressBarProperties = findViewById(R.id.progressBarProperties);
+        tvNoPropertyList = findViewById(R.id.tvNoPropertyList);
         propertyList = (RecyclerView) findViewById(R.id.propertyListRecycleView);
         propertyList.setHasFixedSize(true);
         propertyList.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
-        Button btnAddProperty = (Button) findViewById(R.id.btnAddProperty);
+        Button btnAddProperty = findViewById(R.id.btnAddProperty);
         btnAddProperty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,7 +87,25 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        // Shrink FAB on scroll
+        propertyList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0 && fabAddProperty.isExtended()) {
+                    fabAddProperty.shrink();   // Show only "+"
+                } else if (dy < 0 && !fabAddProperty.isExtended()) {
+                    fabAddProperty.extend();   // Show "+ Add Record"
+                }
+            }
+        });
 
+        fabAddProperty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, AddProperty.class);
+                startActivity(intent);
+            }
+        });
 
     }
     private void goToLoginScreen() {
@@ -131,6 +158,18 @@ public class MainActivity extends AppCompatActivity {
                         View view = LayoutInflater.from(parent.getContext())
                                 .inflate(R.layout.single_property_layout, parent, false);
                         return new PropertiesViewHolder(view);
+                    }
+
+                    @Override
+                    public void onDataChanged(){
+                        super.onDataChanged();
+                        progressBarProperties.setVisibility(View.GONE);
+                        propertyList.setVisibility(View.VISIBLE);
+                        if (getItemCount() == 0) {
+                            tvNoPropertyList.setVisibility(View.VISIBLE);
+                        } else {
+                            tvNoPropertyList.setVisibility(View.GONE);
+                        }
                     }
                 };
 

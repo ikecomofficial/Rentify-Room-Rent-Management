@@ -9,13 +9,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -25,13 +24,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.leinardi.android.speeddial.SpeedDialActionItem;
+import com.leinardi.android.speeddial.SpeedDialView;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -45,6 +45,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
     private CircleImageView cimgTenantProfilePic;
     private String room_id, tenant_id, tenant_name, thumb_tenant_url, tenant_phone, tenant_start_date = "N/A";
     private boolean is_occupied;
+    private SpeedDialView addRecordSpeedDial;
     private RecyclerView rvRentList, rvElcBillList;
     private GradientDrawable gradientDrawable;
     private DatabaseReference databaseReference, roomReference, tenantReference, rentsReference, ebillsReference;
@@ -103,6 +104,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
         btnAddTenant = findViewById(R.id.btnAddTenant);
         btnAddRent = findViewById(R.id.tvAddRent);
         btnAddElcBill = findViewById(R.id.btnAddElcBill);
+        addRecordSpeedDial = findViewById(R.id.fabAddRecord);
 
         loadRentRecyclerList();
         loadElcBillRecyclerList();
@@ -134,6 +136,39 @@ public class RoomDetailsActivity extends AppCompatActivity {
                 addBillIntent.putExtra("tenant_id", tenant_id);
                 startActivity(addBillIntent);
             }
+        });
+
+        // Add menu items
+        addRecordSpeedDial.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab_add_rent, R.drawable.ic_rupee_symbol)
+                        .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.teal_700, null))
+                        .setLabel("Add Rent")
+                        .create()
+        );
+
+        addRecordSpeedDial.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab_add_elc_bill, R.drawable.ic_meter_reading)
+                        .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.teal_700, null))
+                        .setLabel("Add Electricity Bill")
+                        .create()
+        );
+
+// Handle click actions
+        addRecordSpeedDial.setOnActionSelectedListener(actionItem -> {
+            if (actionItem.getId() == R.id.fab_add_rent) {
+                Intent addRentIntent = new Intent(RoomDetailsActivity.this, AddRentActivity.class);
+                addRentIntent.putExtra("room_id", room_id);
+                addRentIntent.putExtra("tenant_id", tenant_id);
+                startActivity(addRentIntent);
+                return false; // closes the speed dial
+            } else if (actionItem.getId() == R.id.fab_add_elc_bill) {
+                Intent addBillIntent = new Intent(RoomDetailsActivity.this, AddEbillActivity.class);
+                addBillIntent.putExtra("room_id", room_id);
+                addBillIntent.putExtra("tenant_id", tenant_id);
+                startActivity(addBillIntent);
+                return false;
+            }
+            return false;
         });
 
     }
@@ -372,7 +407,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
         public void setBillAmount(int billAmount) {
             TextView billAmountView = mView.findViewById(R.id.tvBillAmount);
-            String displayBill = "+ ₹" + NumberFormat.getInstance(new Locale("en", "IN")).format(billAmount);
+            String displayBill = "₹" + NumberFormat.getInstance(new Locale("en", "IN")).format(billAmount);
             billAmountView.setText(displayBill);
         }
 
@@ -434,6 +469,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
         if (firebaseBillsRecyclerAdapter != null) {
             firebaseBillsRecyclerAdapter.stopListening();
         }
+
     }
     @Override
     public boolean onSupportNavigateUp() {

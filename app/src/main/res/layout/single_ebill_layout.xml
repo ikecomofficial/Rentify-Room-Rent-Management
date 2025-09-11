@@ -46,6 +46,7 @@
             android:layout_gravity="center"
             android:textColor="@color/black"
             android:text="1673"
+            android:textSize="15dp"
             android:gravity="center"
             android:textStyle="bold"/>
 
@@ -57,6 +58,7 @@
             android:textColor="@color/black"
             android:layout_gravity="center"
             android:text="+ 74"
+            android:textSize="15dp"
             android:gravity="center"
             android:textStyle="bold"/>
 
@@ -65,28 +67,26 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.2"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_gravity="center">
             <TextView
                 android:id="@+id/tvBillAmount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="+ ₹309"
+                android:text="₹1309"
                 android:layout_gravity="center"
                 android:textColor="@color/green_700_status"
-                android:textSize="16dp"
+                android:textSize="18dp"
                 android:gravity="end"
                 android:textStyle="bold"/>
             <TextView
                 android:id="@+id/tvBillPaymentMode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="2dp"
                 android:text="Cash"
                 android:layout_gravity="end"
-                android:background="@drawable/gpt_bg_chip"
-                android:textColor="@color/black"
-                android:textSize="12sp" />
+                android:textColor="@color/grey_500"
+                android:textSize="14sp" />
         </LinearLayout>
 
     </LinearLayout>
