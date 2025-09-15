@@ -1,6 +1,7 @@
 package com.example.rentify_roomrentmanagement;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -14,16 +15,19 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,10 +51,14 @@ public class RoomDetailsActivity extends AppCompatActivity {
     private boolean is_occupied;
     private SpeedDialView addRecordSpeedDial;
     private RecyclerView rvRentList, rvElcBillList;
+
+    private TabLayout tabLayout;
+    private ViewPager2 viewPager2;
+    private RentBillPagerAdapter rentBillPagerAdapter;
     private GradientDrawable gradientDrawable;
     private DatabaseReference databaseReference, roomReference, tenantReference, rentsReference, ebillsReference;
-    private FirebaseRecyclerAdapter<Rents, RoomDetailsActivity.RentsViewHolder> firebaseRecyclerAdapter;
-    private FirebaseRecyclerAdapter<Bills, RoomDetailsActivity.BillsViewHolder> firebaseBillsRecyclerAdapter;
+   // private FirebaseRecyclerAdapter<Rents, RoomDetailsActivity.RentsViewHolder> firebaseRecyclerAdapter;
+    //private FirebaseRecyclerAdapter<Bills, RoomDetailsActivity.BillsViewHolder> firebaseBillsRecyclerAdapter;
 
 
     @Override
@@ -77,7 +85,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
         ebillsReference = databaseReference.child("e-bills").child(room_id);
 
         // Rent Recycler View
-        rvRentList = (RecyclerView) findViewById(R.id.rvRentRecord);
+        /*rvRentList = (RecyclerView) findViewById(R.id.rvRentRecord);
         rvRentList.setVerticalScrollBarEnabled(true);
         LinearLayoutManager layoutRentManager = new LinearLayoutManager(RoomDetailsActivity.this);
         layoutRentManager.setReverseLayout(true);    // newest items appear at top
@@ -86,28 +94,59 @@ public class RoomDetailsActivity extends AppCompatActivity {
         rvRentList.setHasFixedSize(true);
 
         // e-bill Recycler View
-        rvElcBillList = (RecyclerView) findViewById(R.id.rvElcBillRecord);
+        // rvElcBillList = (RecyclerView) findViewById(R.id.rvElcBillRecord);
         rvElcBillList.setVerticalScrollBarEnabled(true);
         LinearLayoutManager layoutBillManager = new LinearLayoutManager(RoomDetailsActivity.this);
         layoutBillManager.setReverseLayout(true);    // newest items appear at top
         layoutBillManager.setStackFromEnd(false);    // optional, usually false
         rvElcBillList.setLayoutManager(layoutBillManager);
-        rvElcBillList.setHasFixedSize(true);
+        rvElcBillList.setHasFixedSize(true); */
 
         tvRoomStatus = findViewById(R.id.tvRoomStatus);
         tvTenantName = findViewById(R.id.tvTenantName);
         tvTenantPhone = findViewById(R.id.tvTenantPhone);
         tvTenantStartDate = findViewById(R.id.tvStartDate);
-        tvNoRentRecord = findViewById(R.id.tvNoRentRecord);
-        tvNoBillRecord = findViewById(R.id.tvNoBillRecord);
+        // tvNoRentRecord = findViewById(R.id.tvNoRentRecord);
+        //tvNoBillRecord = findViewById(R.id.tvNoBillRecord);
         cimgTenantProfilePic = findViewById(R.id.imgProfile);
         btnAddTenant = findViewById(R.id.btnAddTenant);
-        btnAddRent = findViewById(R.id.tvAddRent);
-        btnAddElcBill = findViewById(R.id.btnAddElcBill);
+        //btnAddRent = findViewById(R.id.tvAddRent);
+        //btnAddElcBill = findViewById(R.id.btnAddElcBill);
         addRecordSpeedDial = findViewById(R.id.fabAddRecord);
 
-        loadRentRecyclerList();
-        loadElcBillRecyclerList();
+        // Fragment References
+        tabLayout = findViewById(R.id.rentTabLayout);
+        viewPager2 = findViewById(R.id.rentViewPager);
+        rentBillPagerAdapter = new RentBillPagerAdapter(this, room_id);
+        viewPager2.setAdapter(rentBillPagerAdapter);
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager2.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                tabLayout.getTabAt(position).select();
+            }
+        });
+
+        // loadRentRecyclerList();
+        //loadElcBillRecyclerList();
 
         btnAddTenant.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,7 +157,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
             }
         });
 
-        btnAddRent.setOnClickListener(new View.OnClickListener() {
+        /* btnAddRent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent addRentIntent = new Intent(RoomDetailsActivity.this, AddRentActivity.class);
@@ -136,12 +175,13 @@ public class RoomDetailsActivity extends AppCompatActivity {
                 addBillIntent.putExtra("tenant_id", tenant_id);
                 startActivity(addBillIntent);
             }
-        });
+        }); */
 
         // Add menu items
         addRecordSpeedDial.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.fab_add_rent, R.drawable.ic_rupee_symbol)
                         .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.teal_700, null))
+                        .setFabImageTintColor(ContextCompat.getColor(this, R.color.white))
                         .setLabel("Add Rent")
                         .create()
         );
@@ -149,11 +189,14 @@ public class RoomDetailsActivity extends AppCompatActivity {
         addRecordSpeedDial.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.fab_add_elc_bill, R.drawable.ic_meter_reading)
                         .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.teal_700, null))
+                        .setFabImageTintColor(ContextCompat.getColor(this, R.color.white))
                         .setLabel("Add Electricity Bill")
                         .create()
         );
 
 // Handle click actions
+        addRecordSpeedDial.getMainFab()
+                .setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.white)));
         addRecordSpeedDial.setOnActionSelectedListener(actionItem -> {
             if (actionItem.getId() == R.id.fab_add_rent) {
                 Intent addRentIntent = new Intent(RoomDetailsActivity.this, AddRentActivity.class);
@@ -206,7 +249,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void loadRentRecyclerList() {
+    /*private void loadRentRecyclerList() {
 
         Query userRents = rentsReference.orderByChild("room_id").equalTo(room_id);
         FirebaseRecyclerOptions<Rents> options = new FirebaseRecyclerOptions.Builder<Rents>()
@@ -227,14 +270,14 @@ public class RoomDetailsActivity extends AppCompatActivity {
                 // Send pid to PropertyDetails Activity
                 //String property_id = getRef(position).getKey();
 
-                        /* holder.mView.setOnClickListener(new View.OnClickListener() {
+                         holder.mView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 Intent propertyDetailIntent = new Intent(RoomDetailsActivity.this, PropertyDetailsActivity.class);
                                 propertyDetailIntent.putExtra("property_id", property_id);
                                 startActivity(propertyDetailIntent);
                             }
-                        }); */
+                        });
             }
 
             @NonNull
@@ -274,9 +317,9 @@ public class RoomDetailsActivity extends AppCompatActivity {
         };
 
         rvRentList.setAdapter(firebaseRecyclerAdapter);
-    }
+    } */
 
-    private void loadElcBillRecyclerList(){
+    /* private void loadElcBillRecyclerList(){
 
         FirebaseRecyclerOptions<Bills> bill_options = new FirebaseRecyclerOptions.Builder<Bills>()
                 .setQuery(ebillsReference, Bills.class)
@@ -334,9 +377,9 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
         rvElcBillList.setAdapter(firebaseBillsRecyclerAdapter);
 
-    }
+    } */
 
-    public class RentsViewHolder extends RecyclerView.ViewHolder {
+    /* public class RentsViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
 
@@ -373,9 +416,9 @@ public class RoomDetailsActivity extends AppCompatActivity {
             rentTenantNameView.setText(displayTenantName);
         }
 
-    }
+    } */
 
-    public class BillsViewHolder extends RecyclerView.ViewHolder {
+    /* public class BillsViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
 
@@ -416,7 +459,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
             billPaymentModeView.setText(String.valueOf(billPaymentMode));
         }
 
-    }
+    } */
 
     @Override
     public void onStart() {
@@ -424,22 +467,25 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
         gradientDrawable = (GradientDrawable) tvRoomStatus.getBackground();
         if (!is_occupied) {
-            btnAddRent.setVisibility(View.GONE);
-            btnAddElcBill.setVisibility(View.GONE);
+            //btnAddRent.setVisibility(View.GONE);
+            //btnAddElcBill.setVisibility(View.GONE);
             btnAddTenant.setVisibility(View.VISIBLE);
-            tvNoRentRecord.setVisibility(View.VISIBLE);
-            tvNoBillRecord.setVisibility(View.VISIBLE);
+            addRecordSpeedDial.setVisibility(View.GONE);
+
+            //tvNoRentRecord.setVisibility(View.VISIBLE);
+            //tvNoBillRecord.setVisibility(View.VISIBLE);
             tvRoomStatus.setText("Vacant");
             gradientDrawable.setColor(Color.parseColor("#C0F6695E"));
         } else {
-            if (firebaseRecyclerAdapter != null) {
+            /* if (firebaseRecyclerAdapter != null) {
                 firebaseRecyclerAdapter.startListening();
             }
             if (firebaseBillsRecyclerAdapter != null) {
                 firebaseBillsRecyclerAdapter.startListening();
-            }
-            btnAddRent.setVisibility(View.VISIBLE);
-            btnAddElcBill.setVisibility(View.VISIBLE);
+            } */
+            //btnAddRent.setVisibility(View.VISIBLE);
+            //btnAddElcBill.setVisibility(View.VISIBLE);
+            addRecordSpeedDial.setVisibility(View.VISIBLE);
             btnAddTenant.setVisibility(View.GONE);
             tvRoomStatus.setText("Occupied");
             gradientDrawable.setColor(Color.parseColor("#CB5CAF6E"));
@@ -463,12 +509,12 @@ public class RoomDetailsActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if (firebaseRecyclerAdapter != null) {
+        /* if (firebaseRecyclerAdapter != null) {
             firebaseRecyclerAdapter.stopListening();
         }
         if (firebaseBillsRecyclerAdapter != null) {
             firebaseBillsRecyclerAdapter.stopListening();
-        }
+        } */
 
     }
     @Override

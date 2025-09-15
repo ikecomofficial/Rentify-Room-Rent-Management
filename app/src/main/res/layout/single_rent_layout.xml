@@ -4,13 +4,32 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingHorizontal="8dp"
-    android:paddingVertical="4dp">
-
+    android:layout_marginVertical="5dp">
+    
+    <LinearLayout
+        android:id="@+id/monthYearHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp">
+        <TextView
+            android:id="@+id/tvMonthYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jan 2025"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+        
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@drawable/gpt_bg_property_card"
+        android:elevation="1dp"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="5dp"
+        android:layout_marginBottom="1dp">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -24,8 +43,7 @@
                 android:layout_height="wrap_content"
                 android:text="August 1, 2025"
                 android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tvRentTime"
@@ -43,24 +61,24 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:orientation="vertical"
-            android:gravity="center|bottom">
+            android:gravity="center|bottom"
+            android:orientation="vertical">
             <!-- Middle: Status (Paid) -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="1dp"
+                android:layout_marginBottom="2dp"
                 app:cardCornerRadius="8dp">
 
                 <TextView
                     android:id="@+id/tvRentPaymentMode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/gpt_bg_chip"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="2dp"
                     android:text="Cash"
-                    android:background="@drawable/gpt_bg_chip"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
             </com.google.android.material.card.MaterialCardView>
@@ -72,25 +90,23 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
-            android:orientation="vertical"
-            android:gravity="end">
+            android:gravity="end"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvRentAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:text="₹ 5,000"
                 android:textColor="@color/green_700_status"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
+
             <TextView
                 android:id="@+id/tvRentTenantName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
                 android:text="By: John"
                 android:textColor="@color/grey_500"
                 android:textSize="14sp" />
@@ -99,6 +115,7 @@
 
     </LinearLayout>
 
+    <!--
     <View
         android:id="@+id/viewSeparatorLine2"
         android:layout_width="match_parent"
@@ -106,7 +123,7 @@
         android:layout_marginHorizontal="10dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="@color/purple_700"
-        android:background="@color/grey_500" />
+        android:background="@color/grey_500" /> -->
 
 
 </LinearLayout>

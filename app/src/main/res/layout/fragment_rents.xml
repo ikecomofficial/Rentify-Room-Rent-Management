@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.RentsFragment">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvRentRecord"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:clipToPadding="false"
+            android:fadeScrollbars="false"
+            android:overScrollMode="never"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="8dp"
+            tools:listitem="@layout/single_rent_layout"
+            android:scrollbarStyle="insideOverlay"
+            android:scrollbars="vertical" />
+
+        <TextView
+            android:id="@+id/tvNoRentRecord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="8dp"
+            android:text="No Rent Record"
+            android:textColor="@color/grey_500" />
+
+</RelativeLayout>

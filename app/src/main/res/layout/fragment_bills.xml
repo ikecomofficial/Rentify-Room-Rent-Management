@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.BillsFragment">
+
+
+        <!-- Header Row -->
+        <LinearLayout
+            android:id="@+id/layoutBillHeaderRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            android:paddingTop="12dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.4"
+                android:gravity="start"
+                android:textStyle="bold"
+                android:text="Date &amp; Time"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.2"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:text="Paid Till"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.2"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:text="Used"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.2"
+                android:gravity="end"
+                android:textStyle="bold"
+                android:text="Amount"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvElcBillRecord"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/layoutBillHeaderRow"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="8dp"/>
+
+        <TextView
+            android:id="@+id/tvNoBillRecord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layoutBillHeaderRow"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="No Electricity Bill Record"
+            android:textColor="@color/grey_500" />
+
+
+</RelativeLayout>

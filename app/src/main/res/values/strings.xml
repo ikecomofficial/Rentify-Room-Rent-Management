@@ -30,4 +30,6 @@
     <string name="text_phone_number">+91 9649770970</string>
     <string name="text_edit_property">Edit Property</string>
     <string name="text_delete_property">Delete Property</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -4,23 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/main"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
-    <!-- Scrollable content -->
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:fillViewport="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp">
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <!-- Header Layout: Title + Vacant -->
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -174,225 +172,51 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Rent Layout: Title + Add Rent Record + Rent Records List -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layoutRentsHeader"
+            <!-- TabLayout with tab items -->
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/rentTabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:tabIndicatorHeight="4dp"
+                app:tabIndicator="@drawable/tab_indicator"
+                app:tabGravity="fill"
+                app:tabMode="fixed"
+                android:layout_marginTop="10dp"
+                style="@style/Widget.MaterialComponents.TabLayout"
+                app:tabTextAppearance="@style/TabItemTextStyle"
                 app:layout_constraintTop_toBottomOf="@id/cardTenantInfo">
 
-                <!-- Title Left -->
-                <TextView
-                    android:id="@+id/tvRentRecord"
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/tab_rents"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Rent Record"
-                    android:textColor="@color/black"
-                    android:textSize="17sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:text="Room Rents"/>
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="6dp"
-                    android:src="@drawable/ic_scroll_up"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/tvRentRecord"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/black" />
-
-                <!-- Add Right -->
-                <TextView
-                    android:id="@+id/tvAddRent"
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/tab_bills"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
-                    android:background="@drawable/gpt_bg_chip"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="5dp"
-                    android:text="+ Add Rent"
-                    android:textColor="@color/purple_500"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:text="Electricity Bills" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.tabs.TabLayout>            <!-- 🆕 TabLayout + ViewPager2 -->
 
-            <RelativeLayout
-                android:id="@+id/cvRentsRecycler"
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/rentViewPager"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/gpt_bg_property_card"
-                app:cardCornerRadius="12dp"
-                app:layout_constraintTop_toBottomOf="@id/layoutRentsHeader">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvRentRecord"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:clipToPadding="false"
-                    android:fadeScrollbars="false"
-                    android:overScrollMode="never"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="8dp"
-                    android:scrollbarStyle="insideOverlay"
-                    android:scrollbars="vertical" />
-
-                <TextView
-                    android:id="@+id/tvNoRentRecord"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="8dp"
-                    android:text="No Rent Record"
-                    android:textColor="@color/grey_500" />
-
-
-            </RelativeLayout>
-
-            <!-- Rent Layout: Title + Add Rent Record + Rent Records List -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layoutBillsHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@id/rentTabLayout"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cvRentsRecycler">
+                app:layout_constraintEnd_toEndOf="parent" />
 
-                <!-- Title Left -->
-                <TextView
-                    android:id="@+id/tvElcBillRecord"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Electricity Bills"
-                    android:textColor="@color/black"
-                    android:textSize="17sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="6dp"
-                    android:src="@drawable/ic_scroll_up"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/tvElcBillRecord"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tint="@color/black" />
-
-                <!-- Add Right -->
-                <TextView
-                    android:id="@+id/btnAddElcBill"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
-                    android:background="@drawable/gpt_bg_chip"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="5dp"
-                    android:text="+ Add E-bill"
-                    android:textColor="@color/purple_500"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/gpt_bg_property_card"
-                app:cardCornerRadius="12dp"
-                app:layout_constraintTop_toBottomOf="@id/layoutBillsHeader">
-
-                <!-- Header Row -->
-                <LinearLayout
-                    android:id="@+id/layoutBillHeaderRow"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="8dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.4"
-                        android:gravity="start"
-                        android:text="Date &amp; Time"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.2"
-                        android:gravity="center"
-                        android:text="Paid Till"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.2"
-                        android:gravity="center"
-                        android:text="Used"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.2"
-                        android:gravity="end"
-                        android:text="Amount"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvElcBillRecord"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/layoutBillHeaderRow"
-                    android:clipToPadding="false"
-                    android:overScrollMode="never"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="8dp"
-                    tools:listitem="@layout/single_ebill_layout" />
-
-                <TextView
-                    android:id="@+id/tvNoBillRecord"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/layoutBillHeaderRow"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="8dp"
-                    android:text="No Electricity Bill Record"
-                    android:textColor="@color/grey_500" />
-
-            </RelativeLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
 
     <com.leinardi.android.speeddial.SpeedDialView
         android:id="@+id/fabAddRecord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:sdMainFabOpenedSrc="@drawable/ic_input_minus"
+        app:sdMainFabClosedSrc="@drawable/ic_input_plus"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
