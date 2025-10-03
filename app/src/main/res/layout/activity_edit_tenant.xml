@@ -16,15 +16,24 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="12dp"
-            android:paddingVertical="4dp"
-            android:layout_margin="10dp">
+            android:paddingTop="4dp"
+            android:layout_margin="10dp"
+            android:paddingBottom="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit Tenant Details"
+                android:textColor="@color/black"
+                android:textSize="28sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvAddPropertySubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Please Fill In Tenant Details"
-                android:textColor="?attr/colorOnBackground"
+                android:text="Update Your Details"
+                android:textColor="@color/grey_700"
                 android:textSize="15sp" />
 
 
@@ -67,7 +76,7 @@
                     app:tint="@color/icon_grey" />
 
                 <EditText
-                    android:id="@+id/editTextTenantName"
+                    android:id="@+id/etEditTenantName"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="12dp"
@@ -97,7 +106,6 @@
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/gpt_edittext_bg">
 
-                <!-- Left phone icon -->
                 <ImageView
                     android:id="@+id/icon_phone"
                     android:layout_width="20dp"
@@ -107,33 +115,18 @@
                     android:src="@drawable/ic_phone"
                     app:tint="@color/icon_grey" />
 
-                <!-- Phone number EditText -->
                 <EditText
-                    android:id="@+id/editTextTenantPhone"
+                    android:id="@+id/etEditTenantPhone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/icon_phone"
-                    android:layout_toStartOf="@id/btnPickContact"
                     android:background="@drawable/gpt_edittext_bg"
                     android:hint="Enter 10 Digit Number (optional)"
-                    android:inputType="phone"
+                    android:inputType="number"
                     android:padding="10dp"
                     android:textColor="@color/black"
                     android:textColorHint="@color/grey_500" />
-
-                <!-- Contact picker icon on the right -->
-                <ImageView
-                    android:id="@+id/btnPickContact"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginStart="12dp"
-                    android:src="@drawable/ic_contact_pick"
-                    app:tint="@color/icon_grey"
-                    android:contentDescription="Pick from contacts" />
             </RelativeLayout>
 
             <!-- Tenant Address -->
@@ -162,7 +155,7 @@
                     app:tint="@color/icon_grey" />
 
                 <EditText
-                    android:id="@+id/editTextTenantAddress"
+                    android:id="@+id/etEditTenantAddress"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="12dp"
@@ -177,10 +170,10 @@
 
             <!-- Add Tenant Button -->
             <TextView
-                android:id="@+id/btnAddTenant"
+                android:id="@+id/btnUpdateTenant"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Add Tenant"
+                android:text="Update Tenant"
                 android:paddingVertical="10dp"
                 android:textSize="20sp"
                 android:gravity="center"

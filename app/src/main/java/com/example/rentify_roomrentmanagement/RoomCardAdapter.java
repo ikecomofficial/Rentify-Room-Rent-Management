@@ -79,7 +79,7 @@ public class RoomCardAdapter extends RecyclerView.Adapter<RoomCardAdapter.RoomVi
             holder.tvTenantName.setText(room.getTenant_name());
             holder.tvTenantPhone.setText(room.getTenant_phone());
             Glide.with(context).load(room.getThumb_tenant_url())
-                    .placeholder(R.drawable.ic_no_tenant_profile_default)
+                    .placeholder(R.drawable.ic_tenant_profile_default)
                     .into(holder.cimgTenantProfile);
         } else {
             holder.tvTenantName.setText("No Tenant Added");

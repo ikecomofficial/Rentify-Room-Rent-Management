@@ -12,11 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.rentify_roomrentmanagement.Bills;
 import com.example.rentify_roomrentmanagement.R;
 import com.example.rentify_roomrentmanagement.Rents;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -24,7 +22,6 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -81,11 +78,6 @@ public class RentsFragment extends Fragment {
     }
 
     private void loadRentRecyclerList() {
-
-        /* Query userRents = rentsReference.orderByChild("room_id").equalTo(room_id);
-        FirebaseRecyclerOptions<Rents> options = new FirebaseRecyclerOptions.Builder<Rents>()
-                .setQuery(userRents, Rents.class)
-                .build(); */
 
         FirebaseRecyclerOptions<Rents> rent_options = new FirebaseRecyclerOptions.Builder<Rents>()
                 .setQuery(rentsReference, Rents.class)
@@ -206,25 +198,12 @@ public class RentsFragment extends Fragment {
         public RentsViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
+
         }
 
         public void setRentDate(String rentDate) {
             TextView rentDateView = mView.findViewById(R.id.tvRentDate);
             rentDateView.setText(rentDate);
-/*
-            // Setting Up Month Header for the Rent Records
-            String lastMonthYear = "Mar";
-            // String currMonthYear = "";
-            String[] rent_date = rentDate.split(" ");
-            String currMonthYear = rent_date[1] + " " + rent_date[2];
-
-            if (!currMonthYear.equals(lastMonthYear)){
-                layoutMonthHeader.setVisibility(View.VISIBLE);
-                tvMonthYearHeader.setText(currMonthYear);
-                lastMonthYear = currMonthYear;
-            } else {
-                layoutMonthHeader.setVisibility(View.GONE);
-            }*/
 
         }
 

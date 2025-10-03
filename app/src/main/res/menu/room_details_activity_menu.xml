@@ -1,12 +1,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/action_edit_property"
-        android:title="@string/text_edit_property"
-        app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_delete_property"
-        android:title="@string/text_delete_property"
+        android:id="@+id/action_edit_tenant"
+        android:title="Edit Tenant"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_remove_tenant"
+        android:title="Remove Tenant"
+        app:showAsAction="never" />
+
+
+    <item
+        android:id="@+id/action_view_all_tenant"
+        android:title="View Past Tenants"
+        app:showAsAction="never" />
+
 </menu>

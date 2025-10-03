@@ -66,7 +66,7 @@ public class AddRentActivity extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         roomReference = databaseReference.child("rooms").child(room_id);
-        tenantReference = databaseReference.child("tenants").child(tenant_id);
+        tenantReference = databaseReference.child("tenants").child(room_id).child(tenant_id);
         rentReference = databaseReference.child("rents").child(room_id);
 
         etRentAmount = findViewById(R.id.etRentAmount);

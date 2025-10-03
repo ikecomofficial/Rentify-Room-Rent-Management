@@ -43,14 +43,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class PropertyDetailsActivity extends AppCompatActivity {
 
     private TextView tvPropertyName, tvPropertyAddress, tvOccupied, tvVacant;
-    private String property_name, property_address;
+    private String property_name, property_address, property_id;
     private long property_default_rent, property_unit_rate;
     private long rooms_occupied, shops_occupied, total_rooms, total_shops;
     private RecyclerView roomsRecyclerView;
     private RoomCardAdapter roomCardAdapter;
     private List<Rooms> roomsList;
-    private DatabaseReference roomsReference, propertiesReference, tenantReference;
-    private String property_id;
+    private DatabaseReference databaseReference, roomsReference, propertiesReference, tenantReference, rentsReference, e_billReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +65,13 @@ public class PropertyDetailsActivity extends AppCompatActivity {
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         property_id = getIntent().getStringExtra("property_id");
-        propertiesReference = FirebaseDatabase.getInstance().getReference().child("properties").child(property_id);
-        roomsReference = FirebaseDatabase.getInstance().getReference("rooms");
-        tenantReference = FirebaseDatabase.getInstance().getReference("tenants");
+        propertiesReference = databaseReference.child("properties").child(property_id);
+        roomsReference = databaseReference.child("rooms");
+        tenantReference = databaseReference.child("tenants");
+        rentsReference = databaseReference.child("rents");
+        e_billReference = databaseReference.child("e-bills");
 
         tvPropertyName = (TextView) findViewById(R.id.tvPropertyName);
         tvPropertyAddress = (TextView) findViewById(R.id.tvPropertyAddress);
@@ -88,6 +89,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
             roomDetailsIntent.putExtra("property_id", property_id);
             roomDetailsIntent.putExtra("room_id", room.getRoom_id());
             roomDetailsIntent.putExtra("is_occupied", room.isIs_occupied());
+            roomDetailsIntent.putExtra("room_name", room.getRoom_name());
             startActivity(roomDetailsIntent);
         });
         roomsRecyclerView.setAdapter(roomCardAdapter);
@@ -144,7 +146,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                             model.setRoom_no(roomNo != null ? roomNo : 0);
 
                             if (tenantId != null && !tenantId.equals("null") && !tenantId.isEmpty()) {
-                                tenantReference.child(tenantId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                tenantReference.child(roomId).child(tenantId).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot tenantSnap) {
                                         if (tenantSnap.exists()) {
@@ -191,8 +193,14 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                     String roomPropertyId = roomDeleteSnap.child("property_id").getValue(String.class);
 
                     if (roomPropertyId != null && roomPropertyId.equals(property_id)) {
+                        String del_room_id = roomDeleteSnap.getKey();
+
+                        // Delete Tenant, Rent and Ebills for all rooms of the opened property.
+                        rentsReference.child(del_room_id).removeValue();
+                        e_billReference.child(del_room_id).removeValue();
+                        tenantReference.child(del_room_id).removeValue();
                         // Delete this room
-                        roomsReference.child(roomDeleteSnap.getKey()).removeValue();
+                        roomsReference.child(del_room_id).removeValue();
                     }
                 }
                 // Remove Property

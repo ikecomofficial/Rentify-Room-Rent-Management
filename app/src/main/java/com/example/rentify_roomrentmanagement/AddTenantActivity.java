@@ -1,8 +1,13 @@
 package com.example.rentify_roomrentmanagement;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +34,8 @@ public class AddTenantActivity extends AppCompatActivity {
 
     private EditText etTenantName, etTenantPhone, etTenantAddress;
     private TextView btnAddTenant;
+    private ImageView btnPickContact;
+    private static final int PICK_CONTACT = 1001;
     private String user_id, room_id, tenant_id, property_id;
     private boolean is_room;
     private FirebaseAuth mAuth;
@@ -62,6 +69,7 @@ public class AddTenantActivity extends AppCompatActivity {
         etTenantPhone = findViewById(R.id.editTextTenantPhone);
         etTenantAddress = findViewById(R.id.editTextTenantAddress);
         btnAddTenant = findViewById(R.id.btnAddTenant);
+        btnPickContact = findViewById(R.id.btnPickContact);
 
         btnAddTenant.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +78,13 @@ public class AddTenantActivity extends AppCompatActivity {
                     updateRoomDatabase();
                     updatePropertyDatabase();
                 }
+            }
+        });
+        btnPickContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+                startActivityForResult(intent, PICK_CONTACT);
             }
         });
     }
@@ -99,11 +114,10 @@ public class AddTenantActivity extends AppCompatActivity {
         tenantMap.put("thumb_tenant_url", "default");
         tenantMap.put("tenant_start_date", todayDate);
         tenantMap.put("tenant_end_date", "null");
-        tenantMap.put("room_id", room_id);
         tenantMap.put("user_id", user_id);
 
         if (tenant_id != null) {
-            tenantReference.child(tenant_id).setValue(tenantMap)
+            tenantReference.child(room_id).child(tenant_id).setValue(tenantMap)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(this, "Tenant Added Successfully", Toast.LENGTH_SHORT).show();
                         finish();
@@ -139,6 +153,24 @@ public class AddTenantActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_CONTACT && resultCode == RESULT_OK) {
+            Uri contactUri = data.getData();
+            String[] projection = {ContactsContract.CommonDataKinds.Phone.NUMBER};
+
+            try (Cursor cursor = getContentResolver().query(contactUri, projection, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                    String number = cursor.getString(numberIndex);
+                    etTenantPhone.setText(number);
+                }
+            }
+        }
     }
 
     @Override

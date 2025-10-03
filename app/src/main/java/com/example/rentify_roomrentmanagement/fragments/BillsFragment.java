@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.example.rentify_roomrentmanagement.Bills;
 import com.example.rentify_roomrentmanagement.R;
-import com.example.rentify_roomrentmanagement.Rents;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
