@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,11 +30,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
-import com.example.rentify_roomrentmanagement.fragments.BillsFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,11 +44,8 @@ import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import java.util.HashMap;
-import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -56,6 +53,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
     private TextView tvRoomStatus, tvTenantName, tvTenantPhone, tvTenantStartDate, btnAddTenant;
     private CircleImageView cimgTenantProfilePic;
+    private FrameLayout btnCall, btnWhatsApp;
     private String room_id, property_id, room_name, tenant_id, tenant_name, tenant_address,
             thumb_tenant_url, tenant_phone, tenant_start_date = "N/A";
     private boolean is_occupied;
@@ -103,6 +101,8 @@ public class RoomDetailsActivity extends AppCompatActivity {
         tvTenantStartDate = findViewById(R.id.tvStartDate);
         cimgTenantProfilePic = findViewById(R.id.imgProfile);
         btnAddTenant = findViewById(R.id.btnAddTenant);
+        btnCall = findViewById(R.id.btnCall);
+        btnWhatsApp = findViewById(R.id.btnWhatsapp);
         addRecordSpeedDial = findViewById(R.id.fabAddRecord);
 
         // Fragment References
@@ -146,6 +146,20 @@ public class RoomDetailsActivity extends AppCompatActivity {
                 Intent addTenantIntent = new Intent(RoomDetailsActivity.this, AddTenantActivity.class);
                 addTenantIntent.putExtra("room_id", room_id);
                 startActivity(addTenantIntent);
+            }
+        });
+
+        btnCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        btnWhatsApp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
 
@@ -230,12 +244,16 @@ public class RoomDetailsActivity extends AppCompatActivity {
         if (!is_occupied) {
             btnAddTenant.setVisibility(View.VISIBLE);
             addRecordSpeedDial.setVisibility(View.GONE);
+            btnCall.setVisibility(View.GONE);
+            btnWhatsApp.setVisibility(View.GONE);
 
             tvRoomStatus.setText("Vacant");
             gradientDrawable.setColor(Color.parseColor("#C0F6695E"));
         } else {
             addRecordSpeedDial.setVisibility(View.VISIBLE);
             btnAddTenant.setVisibility(View.GONE);
+            btnCall.setVisibility(View.VISIBLE);
+            btnWhatsApp.setVisibility(View.VISIBLE);
             tvRoomStatus.setText("Occupied");
             gradientDrawable.setColor(Color.parseColor("#CB5CAF6E"));
 
@@ -333,6 +351,21 @@ public class RoomDetailsActivity extends AppCompatActivity {
         // Inflate layout for bottom sheet
         View view = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_tenant_list, null, false);
         bottomSheetDialog.setContentView(view);
+
+        // Make sure we modify the bottom-sheet container after it is shown
+        bottomSheetDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
+                FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                if (bottomSheet != null) {
+                    // clear default background so your drawable shows through
+                    bottomSheet.setBackground(new ColorDrawable(Color.TRANSPARENT));
+                    bottomSheet.setClipToPadding(false);
+                }
+            }
+        });
+
         RecyclerView rvTenants = view.findViewById(R.id.rvAllTenants);
         // Tenants Recycler View
         LinearLayoutManager layoutTenantManager = new LinearLayoutManager(this);
@@ -413,11 +446,17 @@ public class RoomDetailsActivity extends AppCompatActivity {
         }
         public void setTenantStartDate(String tenantStartDate){
             TextView tenantStartDateView = mView.findViewById(R.id.tvItemStartDate);
-            tenantStartDateView.setText(tenantStartDate);
+            String finalStartDate = "Start: " + tenantStartDate;
+            tenantStartDateView.setText(finalStartDate);
         }
         public void setTenantEndDate(String tenantEndDate){
             TextView tenantEndDateView = mView.findViewById(R.id.tvItemEndDate);
-            tenantEndDateView.setText(tenantEndDate);
+            if (tenantEndDate.equals("null")){
+                tenantEndDateView.setText("current Tenant");
+            }else {
+                String finalEndDate = "End: " + tenantEndDate;
+                tenantEndDateView.setText(finalEndDate);
+            }
         }
     }
 

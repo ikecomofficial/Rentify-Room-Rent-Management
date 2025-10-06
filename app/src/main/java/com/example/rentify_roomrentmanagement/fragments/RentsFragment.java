@@ -87,7 +87,21 @@ public class RentsFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull RentsFragment.RentsViewHolder holder, int position, @NonNull Rents model) {
                 // Bind your data here
-                String rentDate = model.getRent_date();
+
+                holder.setRentAmount(model.getRent_amount());
+                holder.setRentPaymentMode(model.getPayment_mode());
+                holder.setRentTenantName(model.getTenant_name());
+
+                // Format timestamp into date & time
+                long timestamp = Long.parseLong(model.getRent_timestamp());
+                Date date = new Date(timestamp);
+
+                String dateOnly = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(date);
+                String timeOnly = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(date);
+
+                holder.setRentDateTime(dateOnly, timeOnly);
+
+                /* String rentDate = model.getRent_date();
                 holder.setRentDate(rentDate);
                 holder.setRentAmount(model.getRent_amount());
                 holder.setRentTime(model.getRent_time());
@@ -134,6 +148,7 @@ public class RentsFragment extends Fragment {
                 holder.setMonthHeader(fullMonthYear, showHeader);
 
 
+                 */
                 // Long press to delete
                 holder.itemView.setOnLongClickListener(v -> {
                     new MaterialAlertDialogBuilder(v.getContext())
@@ -178,6 +193,17 @@ public class RentsFragment extends Fragment {
         rvRentList.setAdapter(firebaseRecyclerAdapter);
     }
 
+    private String getMonthYear(String timestampStr) {
+        try {
+            long timestamp = Long.parseLong(timestampStr); // convert string → long
+            SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
+            return sdf.format(new Date(timestamp));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return ""; // fallback if string is invalid
+        }
+    }
+
     private void deleteRentRecord(String rent_id) {
         rentsReference.child(rent_id).removeValue()
                 .addOnSuccessListener(aVoid -> {
@@ -201,12 +227,15 @@ public class RentsFragment extends Fragment {
 
         }
 
-        public void setRentDate(String rentDate) {
-            TextView rentDateView = mView.findViewById(R.id.tvRentDate);
-            rentDateView.setText(rentDate);
+
+        public void setRentDateTime(String rentDate, String rentTime){
+            TextView rentDateView = mView.findViewById(R.id.tvRentDateTime);
+            String finalDateTime = rentDate + ", " + rentTime;
+            rentDateView.setText(finalDateTime);
 
         }
 
+        /*
         public void setMonthHeader(String monthYear, boolean showHeader) {
             TextView tvMonthYearHeader = mView.findViewById(R.id.tvMonthYear);
             LinearLayout layoutMonthHeader = mView.findViewById(R.id.monthYearHeader);
@@ -219,16 +248,13 @@ public class RentsFragment extends Fragment {
             }
         }
 
+         */
+
         public void setRentAmount(int rentAmount) {
             TextView rentAmountView = mView.findViewById(R.id.tvRentAmount);
             //String rent_amount = "₹" + String.valueOf(rentAmount);
             String displayRent = "+ ₹" + NumberFormat.getInstance(new Locale("en", "IN")).format(rentAmount);
             rentAmountView.setText(displayRent);
-        }
-
-        public void setRentTime(String rentTime) {
-            TextView rentTimeView = mView.findViewById(R.id.tvRentTime);
-            rentTimeView.setText(rentTime);
         }
 
         public void setRentPaymentMode(String rentPaymentMode) {

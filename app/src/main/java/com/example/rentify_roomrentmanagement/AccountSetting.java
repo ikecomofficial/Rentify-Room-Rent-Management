@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -20,6 +21,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -29,6 +37,7 @@ public class AccountSetting extends AppCompatActivity {
     private CircleImageView cimgProfileImage;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
+    private DatabaseReference userReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +70,7 @@ public class AccountSetting extends AppCompatActivity {
                 GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestIdToken(getString(R.string.default_web_client_id))
                         .requestEmail()
+                        .setAccountName(null)
                         .build();
                 mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
@@ -83,8 +93,26 @@ public class AccountSetting extends AppCompatActivity {
                     }
                 });
             } else {
+                String user_id = user.getUid();
+                userReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_id);
+                userReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String user_name = snapshot.child("name").getValue(String.class);
+                        String user_email = snapshot.child("email").getValue(String.class);
+                        tvName.setText(user_name);
+                        if (Objects.equals(user_email, "null")){
+                            tvEmail.setText(user.getPhoneNumber());
+                        }else {
+                            tvEmail.setText(user.getEmail());
+                        }
+                    }
 
-                tvEmail.setText(user.getEmail());
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
                 tvBtnSignOut.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -111,7 +139,7 @@ public class AccountSetting extends AppCompatActivity {
                 mAuth.signOut();
 
                 // Next, sign out from Google
-                mGoogleSignInClient.signOut().addOnCompleteListener(AccountSetting.this, task -> {
+                mGoogleSignInClient.revokeAccess().addOnCompleteListener(AccountSetting.this, task -> {
                     Toast.makeText(AccountSetting.this, "Signed out successfully", Toast.LENGTH_SHORT).show();
                     goToLoginScreen(); // Redirect to the login screen after successful sign out
                 });

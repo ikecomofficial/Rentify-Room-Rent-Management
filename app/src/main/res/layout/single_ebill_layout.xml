@@ -4,110 +4,137 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginVertical="5dp">
+    android:background="@drawable/gpt_bg_property_card"
+    android:paddingVertical="10dp"
+    android:paddingHorizontal="18dp"
+    android:elevation="2dp"
+    android:layout_marginVertical="6dp">
 
-
-    <LinearLayout
-        android:id="@+id/monthYearHeader"
+    <!-- Top Row -->
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="8dp">
+        android:paddingVertical="2dp">
+
+        <!-- Date -->
         <TextView
-            android:id="@+id/tvMonthYear"
+            android:id="@+id/tvBillDateTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Jan 2025"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            android:textColor="@color/black"/>
+            android:text="03 Oct 2025, 05:47 PM"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true" />
 
-    </LinearLayout>
-    <!-- Header Row -->
+        <!-- Amount -->
+        <TextView
+            android:id="@+id/tvBillAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ ₹320"
+            android:textColor="#48ad50"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true" />
+
+        <!-- Cash pill -->
+        <TextView
+            android:id="@+id/tvBillPaymentMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cash"
+            android:textColor="@color/grey_700"
+            android:textSize="13sp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:background="@drawable/gpt_bg_chip"
+            android:layout_toStartOf="@id/tvBillAmount"
+            android:layout_marginEnd="10dp"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
+
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        android:layout_marginVertical="8dp" />
+
+    <!-- Bottom Row -->
     <LinearLayout
-        android:id="@+id/layoutBillHeaderRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:baselineAligned="false"
         android:orientation="horizontal"
-        android:background="@drawable/gpt_bg_property_card"
-        android:elevation="1dp"
-        android:layout_marginBottom="1dp"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="5dp">
+        android:gravity="center_vertical">
 
+        <!-- Lightning Icon + Text -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.4"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/tvBillDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="August 1, 2025"
-                android:textColor="@color/black"
-                android:textSize="16sp"/>
-            <TextView
-                android:id="@+id/tvBillTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="02:04 PM"
-                android:textColor="@color/grey_700"
-                android:textSize="16sp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_weight="1">
 
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/ic_lightening"
+                android:layout_marginEnd="6dp"
+                app:tint="#e9b217" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Units Paid Till: "
+                android:textColor="#808080"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/tvBillPaidTill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="200"
+                android:textColor="@color/teal_700"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
         </LinearLayout>
 
-
-        <TextView
-            android:id="@+id/tvBillPaidTill"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.2"
-            android:layout_gravity="center"
-            android:textColor="@color/black"
-            android:text="1673"
-            android:textSize="15dp"
-            android:gravity="center"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/tvBillUsedUnit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.2"
-            android:textColor="@color/black"
-            android:layout_gravity="center"
-            android:text="+ 74"
-            android:textSize="15dp"
-            android:gravity="center"
-            android:textStyle="bold"/>
-
-
+        <!-- Right Green Text -->
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2"
-            android:orientation="vertical"
-            android:layout_gravity="center">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/ic_add_round_outlined"
+                android:layout_marginEnd="4dp"
+                app:tint="#10c356" />
+
             <TextView
-                android:id="@+id/tvBillAmount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="₹1309"
-                android:layout_gravity="center"
-                android:textColor="@color/green_700_status"
-                android:textSize="18dp"
-                android:gravity="end"
-                android:textStyle="bold"/>
-            <TextView
-                android:id="@+id/tvBillPaymentMode"
+                android:id="@+id/tvBillUsedUnit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cash"
-                android:layout_gravity="end"
-                android:textColor="@color/grey_500"
-                android:textSize="14sp" />
-        </LinearLayout>
+                android:text="40"
+                android:textColor="#10c356"
+                android:textStyle="bold"
+                android:textSize="15sp"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="units"
+                android:layout_marginStart="5dp"
+                android:textColor="#808080"
+                android:textSize="15sp"/>
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

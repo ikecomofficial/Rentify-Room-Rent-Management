@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,23 +25,30 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class LoginScreen extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "GoogleSignIn";
-    private EditText etEmail, etPassword;
-    private TextView tvCreateAccount, btnLogin;
+    private EditText etEmail, etPassword, etFullName, etPhoneNumber, etOtpCode;
+    private TextView tvCreateAccount, btnLogin, btnSendOtp, btnVerifyOtp;
+    private String verificationId;  // To store OTP verification id
     private LinearLayout btnGoogleSignIn;
+    private RelativeLayout layoutOtpCode;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseReference;
     private GoogleSignInClient mGoogleSignInClient;
@@ -61,6 +69,14 @@ public class LoginScreen extends AppCompatActivity {
         tvCreateAccount = findViewById(R.id.tvCreateAccount);
         btnLogin = findViewById(R.id.btnLogin);
         btnGoogleSignIn = findViewById(R.id.google_sign_in_button);
+
+        // Phone Login Ids
+        etFullName = findViewById(R.id.etFullName);
+        etPhoneNumber = findViewById(R.id.etPhoneNumber);
+        etOtpCode = findViewById(R.id.etOtpCode);
+        btnSendOtp = findViewById(R.id.btnSendOtp);
+        btnVerifyOtp = findViewById(R.id.btnVerifyOtp);
+        layoutOtpCode = findViewById(R.id.layoutOtpCode);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -85,6 +101,22 @@ public class LoginScreen extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Phone Login Button Clicks
+        btnSendOtp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendOTP();
+            }
+        });
+
+        btnVerifyOtp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                verifyOTP();
+            }
+        });
+
     }
 
     private void signInEmailPassword(){
@@ -205,6 +237,116 @@ public class LoginScreen extends AppCompatActivity {
                             Log.w(TAG, "signInWithCredential failed", task.getException());
                             Toast.makeText(LoginScreen.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
+                    }
+                });
+    }
+
+    // Phone Login
+    private void sendOTP() {
+        String phone = etPhoneNumber.getText().toString().trim();
+
+        if (phone.isEmpty() || phone.length() < 10) {
+            etPhoneNumber.setError("Enter valid phone number");
+            etPhoneNumber.requestFocus();
+            return;
+        }
+
+        // Add country code if not included
+        if (!phone.startsWith("+91")) {
+            phone = "+91" + phone;
+        }
+
+        PhoneAuthOptions options =
+                PhoneAuthOptions.newBuilder(mAuth)
+                        .setPhoneNumber(phone)
+                        .setTimeout(60L, TimeUnit.SECONDS)
+                        .setActivity(this)
+                        .setCallbacks(mCallbacks)
+                        .build();
+
+        PhoneAuthProvider.verifyPhoneNumber(options);
+    }
+
+    private final PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks =
+            new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                @Override
+                public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
+                    // Auto-retrieval or instant verification
+                    String code = credential.getSmsCode();
+                    if (code != null) {
+                        etOtpCode.setText(code);
+                        verifyCode(code);
+                    }
+                }
+
+                @Override
+                public void onVerificationFailed(@NonNull FirebaseException e) {
+                    Toast.makeText(LoginScreen.this, "Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken token) {
+                    super.onCodeSent(s, token);
+                    verificationId = s;
+                    //etOtpCode.setVisibility(View.VISIBLE);
+                    layoutOtpCode.setVisibility(View.VISIBLE);
+                    btnVerifyOtp.setVisibility(View.VISIBLE);
+                    btnSendOtp.setVisibility(View.GONE);
+                    Toast.makeText(LoginScreen.this, "OTP Sent!", Toast.LENGTH_SHORT).show();
+                }
+            };
+
+    private void verifyOTP() {
+        String code = etOtpCode.getText().toString().trim();
+        if (code.isEmpty()) {
+            etOtpCode.setError("Enter OTP");
+            etOtpCode.requestFocus();
+            return;
+        }
+        verifyCode(code);
+    }
+
+    private void verifyCode(String code) {
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+        signInWithCredential(credential);
+    }
+
+    private void signInWithCredential(PhoneAuthCredential credential) {
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = task.getResult().getUser();
+                        Toast.makeText(LoginScreen.this, "Login Success: " + user.getPhoneNumber(), Toast.LENGTH_LONG).show();
+
+                        // Save user in Realtime Database if first login
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
+                        String uid = user.getUid();
+                        String userName = etFullName.getText().toString().trim();
+                        if (userName.isEmpty()){
+                            etFullName.setError("Enter Your Name");
+                            return;
+                        }
+
+                        HashMap<String, Object> userMap = new HashMap<>();
+
+                        userMap.put("name", userName);
+                        userMap.put("email", "null");
+                        userMap.put("user_id", uid);
+                        userMap.put("role", "owner");
+                        userMap.put("profile_url", "default");
+                        userMap.put("thumb_profile_url", "default");
+                        userMap.put("created_at", String.valueOf(System.currentTimeMillis()));
+                        userMap.put("is_verified", String.valueOf(user.isEmailVerified()));
+                        userMap.put("phone", user.getPhoneNumber());
+
+                        ref.child(uid).updateChildren(userMap);
+
+                        // Move to Home Screen
+                        startActivity(new Intent(LoginScreen.this, MainActivity.class));
+                        finish();
+
+                    } else {
+                        Toast.makeText(LoginScreen.this, "Login Failed", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

@@ -64,6 +64,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
 
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Property Details");
         }
         databaseReference = FirebaseDatabase.getInstance().getReference();
         property_id = getIntent().getStringExtra("property_id");
@@ -111,8 +112,10 @@ public class PropertyDetailsActivity extends AppCompatActivity {
 
                 tvPropertyName.setText(property_name);
                 tvPropertyAddress.setText(property_address);
-                tvOccupied.setText(String.valueOf(totalRoomShopOcc));
-                tvVacant.setText(String.valueOf(totalRoomShopVacant));
+                String finalTotalOcc = "Occupied: " + totalRoomShopOcc;
+                String finalTotalVacant = "Vacant: " + totalRoomShop;
+                tvOccupied.setText(finalTotalOcc);
+                tvVacant.setText(finalTotalVacant);
             }
 
             @Override

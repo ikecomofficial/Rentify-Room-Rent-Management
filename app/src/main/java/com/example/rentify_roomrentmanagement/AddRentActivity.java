@@ -41,7 +41,7 @@ public class AddRentActivity extends AppCompatActivity {
     private TextView btnSaveRent;
     private MaterialButton btnDatePicker, btnTimePicker;
     private MaterialButtonToggleGroup tgPaymentMode;
-    private String room_id, tenant_id, tenant_name, currTimeStamp, rent_id, paymentMode = "Cash";
+    private String room_id, tenant_id, tenant_name, currTimeStamp, rent_timestamp, rent_id, paymentMode = "Cash";
     private String rent_date, rent_time;
     private Integer room_rent = 0;
     private SwitchMaterial smCustomDateTime;
@@ -146,8 +146,9 @@ public class AddRentActivity extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
         SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
-        rent_date = dateFormat.format(calendar.getTime());
-        rent_time = timeFormat.format(calendar.getTime());
+        //rent_date = dateFormat.format(calendar.getTime());
+        //rent_time = timeFormat.format(calendar.getTime());
+        rent_timestamp = String.valueOf(System.currentTimeMillis());
     }
 
     // Show picker dialogs
@@ -157,23 +158,30 @@ public class AddRentActivity extends AppCompatActivity {
         // Date Picker
         DatePickerDialog datePicker = new DatePickerDialog(this,
                 (view, year, month, dayOfMonth) -> {
-                    Calendar pickedDate = Calendar.getInstance();
-                    pickedDate.set(year, month, dayOfMonth);
+                    Calendar pickedDateTime = Calendar.getInstance();
+                    pickedDateTime.set(year, month, dayOfMonth);
 
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
-                    rent_date = dateFormat.format(pickedDate.getTime());
+                    //SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+                    //rent_date = dateFormat.format(pickedDateTime.getTime());
 
                     // After date, show time picker
                     TimePickerDialog timePicker = new TimePickerDialog(this,
                             (timeView, hourOfDay, minute) -> {
-                                Calendar pickedTime = Calendar.getInstance();
-                                pickedTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                                pickedTime.set(Calendar.MINUTE, minute);
+                                pickedDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                                pickedDateTime.set(Calendar.MINUTE, minute);
+                                pickedDateTime.set(Calendar.SECOND, 0);
+                                pickedDateTime.set(Calendar.MILLISECOND, 0);
 
-                                SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-                                rent_time = timeFormat.format(pickedTime.getTime());
+                                //SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+                                //rent_time = timeFormat.format(pickedDateTime.getTime());
 
-                            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+                                // If you want it as String
+                                rent_timestamp = String.valueOf(pickedDateTime.getTimeInMillis());
+
+                                },
+                            calendar.get(Calendar.HOUR_OF_DAY),
+                            calendar.get(Calendar.MINUTE),
+                            false);
 
                     timePicker.show();
                 },
@@ -201,8 +209,9 @@ public class AddRentActivity extends AppCompatActivity {
         rentMap.put("room_id", room_id);
         rentMap.put("tenant_id", tenant_id);
         rentMap.put("payment_mode", paymentMode);
-        rentMap.put("rent_date", rent_date);
-        rentMap.put("rent_time", rent_time);
+        //rentMap.put("rent_date", rent_date);
+        //rentMap.put("rent_time", rent_time);
+        rentMap.put("rent_timestamp", rent_timestamp);
 
         if (rent_id != null){
             rentReference.child(rent_id).setValue(rentMap)

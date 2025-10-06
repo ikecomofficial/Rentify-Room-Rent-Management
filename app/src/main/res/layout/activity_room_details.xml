@@ -169,6 +169,44 @@
 
                     </LinearLayout>
 
+
+                    <!-- Left Icon Circle -->
+                    <FrameLayout
+                        android:id="@+id/btnCall"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/gpt_bg_circle"
+                        android:gravity="center"
+                        app:layout_constraintEnd_toStartOf="@id/btnWhatsapp"
+                        app:layout_constraintTop_toBottomOf="@id/tvTenantPhone">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_phone"
+                            app:tint="@color/black" />
+                    </FrameLayout>
+                    <!-- Left Icon Circle -->
+                    <FrameLayout
+                        android:id="@+id/btnWhatsapp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/gpt_bg_circle"
+                        android:gravity="center"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvTenantPhone" >
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/ic_whatsapp"
+                            app:tint="@color/black"
+                            android:layout_gravity="center"/>
+                    </FrameLayout>
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 

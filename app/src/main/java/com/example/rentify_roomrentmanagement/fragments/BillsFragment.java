@@ -59,7 +59,6 @@ public class BillsFragment extends Fragment {
         rvElcBillList.setLayoutManager(layoutBillManager);
 
         tvNoBillRecord = view.findViewById(R.id.tvNoBillRecord);
-        layoutBillHeaderRow = view.findViewById(R.id.layoutBillHeaderRow);
 
         loadElcBillRecyclerList();
 
@@ -90,15 +89,23 @@ public class BillsFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull BillsFragment.BillsViewHolder holder, int position, @NonNull Bills model) {
                 // Bind your data here
-                String billDate = model.getEbill_date();
                 holder.setBillAmount(model.getEbill_amount());
-                holder.setBillDate(billDate);
-                holder.setBillTime(model.getEbill_time());
                 holder.setBillPaymentMode(model.getPayment_mode());
                 holder.setBillUnitPaidTill(model.getPaid_upto());
                 holder.setBillUnitUsed(model.getUnits_used());
                 // etc.
 
+                // Format timestamp into date & time
+                long timestamp = Long.parseLong(model.getEbill_timestamp());
+                Date date = new Date(timestamp);
+
+                String dateOnly = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(date);
+                String timeOnly = new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(date);
+
+                holder.setBillDateTime(dateOnly, timeOnly);
+
+
+                /*
                 // Extract current month-year
                 String[] parts = billDate.split(" ");
                 String currMonthYear = "";
@@ -138,6 +145,8 @@ public class BillsFragment extends Fragment {
 
                 holder.setMonthHeader(fullMonthYear, showHeader);
 
+                 */
+
                 // Long press to delete
                 holder.itemView.setOnLongClickListener(v -> {
                     new MaterialAlertDialogBuilder(v.getContext())
@@ -170,10 +179,8 @@ public class BillsFragment extends Fragment {
                 int itemCount = getItemCount();
                 if (itemCount == 0) {
                     tvNoBillRecord.setVisibility(View.VISIBLE);
-                    layoutBillHeaderRow.setVisibility(View.GONE);
                 } else {
                     tvNoBillRecord.setVisibility(View.GONE);
-                    layoutBillHeaderRow.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -204,6 +211,14 @@ public class BillsFragment extends Fragment {
             mView = itemView;
         }
 
+        public void setBillDateTime(String billDate, String billTime){
+            TextView billDateView = mView.findViewById(R.id.tvBillDateTime);
+            String finalDateTime = billDate + ", " + billTime;
+            billDateView.setText(finalDateTime);
+
+        }
+
+        /*
         public void setMonthHeader(String monthYear, boolean showHeader) {
             TextView tvMonthYearHeader = mView.findViewById(R.id.tvMonthYear);
             LinearLayout layoutMonthHeader = mView.findViewById(R.id.monthYearHeader);
@@ -216,15 +231,7 @@ public class BillsFragment extends Fragment {
             }
         }
 
-        public void setBillDate(String billDate) {
-            TextView billDateView = mView.findViewById(R.id.tvBillDate);
-            billDateView.setText(billDate);
-        }
-
-        public void setBillTime(String billTime) {
-            TextView billTimeView = mView.findViewById(R.id.tvBillTime);
-            billTimeView.setText(billTime);
-        }
+         */
 
         public  void setBillUnitPaidTill(int billUnitPaidTill){
             TextView billUnitPaidTillView = mView.findViewById(R.id.tvBillPaidTill);
@@ -233,8 +240,7 @@ public class BillsFragment extends Fragment {
 
         public  void setBillUnitUsed(int billUnitUsed){
             TextView billUnitUsedView = mView.findViewById(R.id.tvBillUsedUnit);
-            String displayUnitUsed = "+" + billUnitUsed;
-            billUnitUsedView.setText(displayUnitUsed);
+            billUnitUsedView.setText(String.valueOf(billUnitUsed));
         }
 
         public void setBillAmount(int billAmount) {

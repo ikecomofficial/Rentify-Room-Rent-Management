@@ -18,7 +18,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.rentify_roomrentmanagement"
-        minSdk 35
+        minSdk 27
         targetSdk 35
         versionCode 1
         versionName "1.0"

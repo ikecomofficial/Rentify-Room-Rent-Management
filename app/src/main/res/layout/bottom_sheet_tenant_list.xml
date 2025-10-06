@@ -25,7 +25,7 @@
         android:text="List of All Tenants"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@android:color/black"
+        android:textColor="@color/black"
         android:layout_gravity="center_horizontal"
         android:paddingBottom="12dp"/>
 

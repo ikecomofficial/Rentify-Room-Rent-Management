@@ -146,6 +146,125 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <!-- Email Field -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/gpt_edittext_bg"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/icon_email1"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="12dp"
+                android:src="@drawable/ic_person"
+                app:tint="@color/icon_grey" />
+
+            <EditText
+                android:id="@+id/etFullName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@id/icon_email1"
+                android:layout_marginStart="12dp"
+                android:background="@null"
+                android:hint="Full Name"
+                android:padding="10dp"
+                android:textColor="#000000"
+                android:textColorHint="#888888"
+                android:inputType="textEmailAddress" />
+        </RelativeLayout>
+
+        <!-- Email Field -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/gpt_edittext_bg"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/tvCountryCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+91"
+                android:textSize="20dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="12dp"/>
+
+            <EditText
+                android:id="@+id/etPhoneNumber"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@id/tvCountryCode"
+                android:layout_marginStart="12dp"
+                android:background="@null"
+                android:hint="Phone Number"
+                android:padding="10dp"
+                android:textColor="#000000"
+                android:textColorHint="#888888"
+                android:inputType="number" />
+        </RelativeLayout>
+
+        <!-- OTP Field -->
+        <RelativeLayout
+            android:id="@+id/layoutOtpCode"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:visibility="gone"
+            android:background="@drawable/gpt_edittext_bg"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/icon_key"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="12dp"
+                android:src="@drawable/ic_person"
+                app:tint="@color/icon_grey" />
+
+            <EditText
+                android:id="@+id/etOtpCode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@id/icon_key"
+                android:layout_marginStart="12dp"
+                android:background="@null"
+                android:hint="OTP Code"
+                android:padding="10dp"
+                android:textColor="#000000"
+                android:textColorHint="#888888"
+                android:inputType="textEmailAddress" />
+        </RelativeLayout>
+
+        <!-- OTP Button -->
+        <TextView
+            android:id="@+id/btnSendOtp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Send OTP"
+            android:paddingVertical="10dp"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:maxLength="10"
+            android:textColor="@color/white"
+            android:background="@drawable/gpt_bg_chip2"/>
+
+        <!-- Verify Button -->
+        <TextView
+            android:id="@+id/btnVerifyOtp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Verify OTP"
+            android:paddingVertical="10dp"
+            android:textSize="20sp"
+            android:visibility="gone"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@drawable/gpt_bg_chip2"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -2,15 +2,12 @@ package com.example.rentify_roomrentmanagement;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -26,22 +23,31 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private RecyclerView propertyList;
-    private TextView tvNoPropertyList;
-    private ProgressBar progressBarProperties;
-    private ExtendedFloatingActionButton fabAddProperty;
-    private DatabaseReference propertiesReference;
+    private String user_id;
+    private int occupiedSum, totalSum, propertiesItemCount;
+    private CircleImageView cimgUserAccount;
+    private TextView tvNoPropertyList, tvUserName, tvProgressLabel, tvPropertiesCount;
+    private ProgressBar progressBarProperties, occupancyProgressBar;
+    private MaterialButton btnAddProperty;
+    private DatabaseReference propertiesReference, userReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,52 +60,68 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        fabAddProperty = findViewById(R.id.fabAddProperty);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        btnAddProperty = findViewById(R.id.btnAddProperty);
         progressBarProperties = findViewById(R.id.progressBarProperties);
         tvNoPropertyList = findViewById(R.id.tvNoPropertyList);
+        tvUserName = findViewById(R.id.tvUserName);
+        tvProgressLabel = findViewById(R.id.tvProgressLabel);
+        tvPropertiesCount = findViewById(R.id.tvPropertiesCount);
+        occupancyProgressBar = findViewById(R.id.occupancyProgressBar);
+        cimgUserAccount = findViewById(R.id.cimgUserAccount);
         propertyList = (RecyclerView) findViewById(R.id.propertyListRecycleView);
         propertyList.setHasFixedSize(true);
         propertyList.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
-        Button btnAddProperty = findViewById(R.id.btnAddProperty);
-        btnAddProperty.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AddProperty.class);
-                startActivity(intent);
-            }
-        });
-
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
         // Check if the user is already signed in. If not, redirect to LoginScreen.
         if (user == null) {
             goToLoginScreen();
         } else {
+            user_id = user.getUid();
             String providerId = user.getProviderId();
             if (providerId.equals("google.com")){
+                // Set UserName on top
+                tvUserName.setText(user.getDisplayName());
                 // Configure Google Sign In to get the client for sign-out
                 GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestIdToken(getString(R.string.default_web_client_id))
                         .requestEmail()
                         .build();
                 mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+            }else {
+                userReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_id);
+                userReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String user_name = snapshot.child("name").getValue(String.class);
+                        tvUserName.setText(user_name);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         }
 
-        // Shrink FAB on scroll
-        propertyList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+        cimgUserAccount.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0 && fabAddProperty.isExtended()) {
-                    fabAddProperty.shrink();   // Show only "+"
-                } else if (dy < 0 && !fabAddProperty.isExtended()) {
-                    fabAddProperty.extend();   // Show "+ Add Record"
-                }
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, AccountSetting.class);
+                startActivity(intent);
             }
         });
 
-        fabAddProperty.setOnClickListener(new View.OnClickListener() {
+
+        btnAddProperty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, AddProperty.class);
@@ -117,7 +139,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart(){
         super.onStart();
+        loadPropertiesFromFirebase();
+    }
 
+    private void loadPropertiesFromFirebase(){
         propertiesReference = FirebaseDatabase.getInstance().getReference().child("properties");
         String userID = FirebaseAuth.getInstance().getUid();
 
@@ -130,6 +155,26 @@ public class MainActivity extends AppCompatActivity {
                 new FirebaseRecyclerAdapter<Properties, PropertiesViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull PropertiesViewHolder holder, int position, @NonNull Properties model) {
+
+
+                        // Fetch occupancy data
+                        int occupied_rooms = model.getRooms_occupied();
+                        int occupied_shops = model.getShops_occupied();
+                        int total_rooms = model.getTotal_rooms();
+                        int total_shops = model.getTotal_shops();
+
+                        // Property Sums
+                        int propertyOccSum = occupied_rooms + occupied_shops;
+                        int propertyTotalSum = total_rooms + total_shops;
+
+                        // Get Total and Occupied for All Properties Combined
+                        occupiedSum += propertyOccSum;
+                        totalSum += propertyTotalSum;
+
+                        setProgressBarData(occupiedSum, totalSum);
+
+
+
                         // Bind your data here
                         holder.setPropertyName(model.getProperty_name());
                         holder.setPropertyAddress(model.getProperty_address());
@@ -152,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
                         });
                     }
 
+
                     @NonNull
                     @Override
                     public PropertiesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -165,10 +211,13 @@ public class MainActivity extends AppCompatActivity {
                         super.onDataChanged();
                         progressBarProperties.setVisibility(View.GONE);
                         propertyList.setVisibility(View.VISIBLE);
-                        if (getItemCount() == 0) {
+                        propertiesItemCount = getItemCount();
+                        if (propertiesItemCount == 0) {
                             tvNoPropertyList.setVisibility(View.VISIBLE);
                         } else {
                             tvNoPropertyList.setVisibility(View.GONE);
+                            String p_count = "Properties" + " (" + propertiesItemCount + ")";
+                            tvPropertiesCount.setText(p_count);
                         }
                     }
                 };
@@ -177,6 +226,25 @@ public class MainActivity extends AppCompatActivity {
         propertyList.setAdapter(firebaseRecyclerAdapter);
 
     }
+
+    public void setProgressBarData(int occupied, int total) {
+        if (total > 0) {
+            int bar_percentage = (int) ((occupied * 100) / total);
+
+            occupancyProgressBar.setMax(100); // make sure max is 100
+            occupancyProgressBar.setProgress(bar_percentage);
+
+            // Update label
+            String progressLabelText = bar_percentage + "%";
+            tvProgressLabel.setText(progressLabelText);
+        } else {
+            occupancyProgressBar.setProgress(0);
+            tvProgressLabel.setText("No Data");
+        }
+    }
+
+
+
 
     public class PropertiesViewHolder extends RecyclerView.ViewHolder{
 
@@ -216,25 +284,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_activity_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_account_setting) {
-
-            Intent intent = new Intent(MainActivity.this, AccountSetting.class);
-            startActivity(intent);
-
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }

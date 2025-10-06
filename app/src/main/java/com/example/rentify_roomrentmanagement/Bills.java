@@ -1,20 +1,29 @@
 package com.example.rentify_roomrentmanagement;
 
 public class Bills {
-    public String ebill_date, ebill_time, payment_mode;
+    public String ebill_date, ebill_time, payment_mode, ebill_timestamp;
     public int paid_upto, units_used, ebill_amount;
 
     public Bills(){
 
     }
 
-    public Bills(String ebill_date, String payment_mode, String ebill_time, int paid_upto, int units_used, int ebill_amount) {
+    public Bills(String ebill_timestamp, String ebill_date, String payment_mode, String ebill_time, int paid_upto, int units_used, int ebill_amount) {
         this.ebill_date = ebill_date;
         this.ebill_time = ebill_time;
         this.paid_upto = paid_upto;
         this.units_used = units_used;
         this.ebill_amount = ebill_amount;
         this.payment_mode = payment_mode;
+        this.ebill_timestamp = ebill_timestamp;
+    }
+
+    public String getEbill_timestamp() {
+        return ebill_timestamp;
+    }
+
+    public void setEbill_timestamp(String ebill_timestamp) {
+        this.ebill_timestamp = ebill_timestamp;
     }
 
     public String getEbill_date() {

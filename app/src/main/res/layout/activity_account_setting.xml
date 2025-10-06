@@ -75,7 +75,7 @@
         android:layout_marginEnd="8dp"
         android:textAlignment="center"
         android:textSize="16sp"
-        android:text="@string/text_email_label"
+        android:text="E-mail/Phone"
         android:textColor="@color/acc_setting_labels"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_display_name"/>

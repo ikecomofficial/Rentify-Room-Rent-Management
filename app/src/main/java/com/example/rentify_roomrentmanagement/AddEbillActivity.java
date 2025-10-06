@@ -36,7 +36,7 @@ public class AddEbillActivity extends AppCompatActivity {
     private LinearLayout layoutLastPaidUnit, layoutElcBillAmount, layoutElcUnitPaid;
     private MaterialButtonToggleGroup tgPaymentMode, tgElcBillMode;
     private String room_id, tenant_id, ebill_id, paymentMode = "Cash", elcBillAmount, unitPaidUpTo;
-    private String ebill_date, ebill_time;
+    private String ebill_date, ebill_time, ebill_timestamp;
     private Integer last_paid_upto = -1, elc_unit_rate = 0, units_used = 0, elc_bill_amount = 0, units_paid_upto = 0;
     private boolean isByUnits = true, isFirstRecord = true;
     private SwitchMaterial smCustomDateTime;
@@ -171,13 +171,16 @@ public class AddEbillActivity extends AppCompatActivity {
         });
     }
     private void setCurrentDateTime() {
-        Calendar calendar = Calendar.getInstance();
+        /*Calendar calendar = Calendar.getInstance();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
         SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
         ebill_date = dateFormat.format(calendar.getTime());
         ebill_time = timeFormat.format(calendar.getTime());
+
+         */
+        ebill_timestamp = String.valueOf(System.currentTimeMillis());
     }
 
     // Show picker dialogs
@@ -187,23 +190,30 @@ public class AddEbillActivity extends AppCompatActivity {
         // Date Picker
         DatePickerDialog datePicker = new DatePickerDialog(this,
                 (view, year, month, dayOfMonth) -> {
-                    Calendar pickedDate = Calendar.getInstance();
-                    pickedDate.set(year, month, dayOfMonth);
+                    Calendar pickedDateTime = Calendar.getInstance();
+                    pickedDateTime.set(year, month, dayOfMonth);
 
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
-                    ebill_date = dateFormat.format(pickedDate.getTime());
+                    //SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+                    //rent_date = dateFormat.format(pickedDateTime.getTime());
 
                     // After date, show time picker
                     TimePickerDialog timePicker = new TimePickerDialog(this,
                             (timeView, hourOfDay, minute) -> {
-                                Calendar pickedTime = Calendar.getInstance();
-                                pickedTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                                pickedTime.set(Calendar.MINUTE, minute);
+                                pickedDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                                pickedDateTime.set(Calendar.MINUTE, minute);
+                                pickedDateTime.set(Calendar.SECOND, 0);
+                                pickedDateTime.set(Calendar.MILLISECOND, 0);
 
-                                SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-                                ebill_time = timeFormat.format(pickedTime.getTime());
+                                //SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+                                //rent_time = timeFormat.format(pickedDateTime.getTime());
 
-                            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+                                // If you want it as String
+                                ebill_timestamp = String.valueOf(pickedDateTime.getTimeInMillis());
+
+                            },
+                            calendar.get(Calendar.HOUR_OF_DAY),
+                            calendar.get(Calendar.MINUTE),
+                            false);
 
                     timePicker.show();
                 },
@@ -251,8 +261,9 @@ public class AddEbillActivity extends AppCompatActivity {
         billMap.put("room_id", room_id);
         billMap.put("tenant_id", tenant_id);
         billMap.put("payment_mode", paymentMode);
-        billMap.put("ebill_date", ebill_date);
-        billMap.put("ebill_time", ebill_time);
+        //billMap.put("ebill_date", ebill_date);
+        //billMap.put("ebill_time", ebill_time);
+        billMap.put("ebill_timestamp", ebill_timestamp);
         billMap.put("paid_upto", units_paid_upto);
         billMap.put("units_used", units_used);
         billMap.put("ebill_amount", elc_bill_amount);
