@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/gpt_bg_property_card"
-    android:elevation="2dp"
+    android:elevation="3dp"
     android:weightSum="10"
     android:layout_margin="6dp"
     android:paddingVertical="16dp"
@@ -28,7 +28,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="7"
-        android:paddingStart="6dp"
+        android:paddingHorizontal="6dp"
         android:orientation="vertical">
 
 
@@ -36,7 +36,7 @@
             android:id="@+id/tvPropertyName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/text_property_name"
+            android:text="@string/text_properties"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="?android:attr/textColorPrimary" />
@@ -62,9 +62,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="@string/text_address_city"
+                android:text="@string/text_city"
                 android:textSize="16sp"
-                android:textColor="?android:attr/textColorSecondary" />
+                android:textColor="@color/text_sub_grey_600" />
 
 
         </LinearLayout>
@@ -90,7 +90,7 @@
                 <ImageView
                     android:layout_width="18dp"
                     android:layout_height="18dp"
-                    android:contentDescription="TODO"
+                    android:contentDescription="@string/text_image_desc"
                     android:src="@drawable/ic_single_bed"
                     android:layout_gravity="center_vertical"
                     app:tint="@color/black" />
@@ -98,8 +98,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" Rooms: "
+                    android:text="@string/text_rooms"
                     android:textSize="14sp"
+                    android:layout_marginHorizontal="3dp"
                     android:textColor="@color/black"
                     android:layout_gravity="center_vertical" />
 
@@ -107,7 +108,7 @@
                     android:id="@+id/tvOccupiedRooms"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4"
+                    android:text="@string/text_any_number"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
@@ -116,7 +117,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="/"
+                    android:text="@string/text_slash"
                     android:textStyle="bold"
                     android:textSize="14sp"
                     android:textColor="@color/black"
@@ -126,7 +127,7 @@
                     android:id="@+id/tvTotalRooms"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="8"
+                    android:text="@string/text_any_number"
                     android:textStyle="bold"
                     android:textSize="14sp"
                     android:textColor="@color/black"
@@ -145,7 +146,7 @@
                 <ImageView
                     android:layout_width="18dp"
                     android:layout_height="18dp"
-                    android:contentDescription="TDO"
+                    android:contentDescription="@string/text_image_desc"
                     android:src="@drawable/ic_store_shop"
                     android:layout_gravity="center_vertical"
                     app:tint="@color/black" />
@@ -154,15 +155,16 @@
                     android:id="@+id/shops"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" Shops: "
+                    android:text="@string/text_shops"
                     android:textSize="14sp"
+                    android:layout_marginHorizontal="3dp"
                     android:textColor="@color/black"
                     android:layout_gravity="center_vertical" />
                 <TextView
                     android:id="@+id/tvOccupiedShops"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4"
+                    android:text="@string/text_any_number"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
@@ -171,7 +173,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="/"
+                    android:text="@string/text_slash"
                     android:textStyle="bold"
                     android:textSize="14sp"
                     android:textColor="@color/black"
@@ -181,7 +183,7 @@
                     android:id="@+id/tvTotalShops"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="8"
+                    android:text="@string/text_any_number"
                     android:textStyle="bold"
                     android:textSize="14sp"
                     android:textColor="@color/black"

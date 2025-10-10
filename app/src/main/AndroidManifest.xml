@@ -43,7 +43,7 @@
         <activity
             android:name=".LoginScreen"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+            android:theme="@style/Theme.RentifyRoomRentManagement.Login" />
         <activity
             android:name=".SignUpScreen"
             android:exported="false"

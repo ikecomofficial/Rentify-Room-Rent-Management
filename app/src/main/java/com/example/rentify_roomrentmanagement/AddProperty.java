@@ -1,7 +1,9 @@
 package com.example.rentify_roomrentmanagement;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -13,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.widget.NestedScrollView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -46,6 +49,32 @@ public class AddProperty extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Adjust/Scroll Layout to move view on top of keyboard.
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+        NestedScrollView scrollView = findViewById(R.id.main);
+        scrollView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            // Get visible area of the screen
+            Rect r = new Rect();
+            scrollView.getWindowVisibleDisplayFrame(r);
+            int screenHeight = scrollView.getRootView().getHeight();
+
+            // Calculate keyboard height
+            int keypadHeight = screenHeight - r.bottom;
+
+            if (keypadHeight > screenHeight * 0.15) { // If keyboard is open
+                View focusedView = getCurrentFocus();
+                if (focusedView != null) {
+                    scrollView.post(() -> scrollView.smoothScrollTo(0, focusedView.getBottom()));
+                }
+            }
+        });
+
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Add New Property");
+        }
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
@@ -113,9 +142,6 @@ public class AddProperty extends AppCompatActivity {
             }
         });
 
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     private boolean savePropertyToFirebase(){

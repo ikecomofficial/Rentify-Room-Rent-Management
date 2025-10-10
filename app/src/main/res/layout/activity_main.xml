@@ -31,8 +31,8 @@
                 android:id="@+id/tv_welcome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Welcome Back,"
-                android:textColor="#757575"
+                android:text="@string/text_welcome"
+                android:textColor="@color/text_sub_grey_600"
                 android:textSize="16sp"
                 />
 
@@ -40,8 +40,8 @@
                 android:id="@+id/tvUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Inderjeet Kumar"
-                android:textColor="@color/black"
+                android:text="@string/text_name"
+                android:textColor="@color/text_black"
                 android:textSize="28sp"
                 android:textStyle="bold"
                  />
@@ -74,7 +74,7 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="16dp"
         app:cardElevation="2dp"
-        android:backgroundTint="#F1FAF9"
+        android:backgroundTint="@color/bg_occupancy_layout"
         app:layout_constraintTop_toBottomOf="@+id/headerContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -99,19 +99,19 @@
                     android:id="@+id/tv_total_occupancy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total Occupancy"
+                    android:text="@string/text_occupancy"
                     android:textSize="15sp"
-                    android:textColor="#00796B"
+                    android:textColor="@color/teal_700"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvProgressLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="88%"
+                    android:text="@string/text_some_percentage"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="#212121"
+                    android:textColor="@color/text_black"
                     android:layout_marginTop="4dp" />
 
                 <ProgressBar
@@ -120,8 +120,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="8dp"
                     android:layout_marginTop="6dp"
-                    android:progress="75"
-                    android:progressTint="#00796B"
+                    android:progress="0"
+                    android:progressTint="@color/teal_200"
                     android:progressBackgroundTint="#E0E0E0"
                     android:indeterminate="false" />
             </LinearLayout>
@@ -135,31 +135,37 @@
                 android:gravity="end">
 
                 <TextView
-                    android:id="@+id/tv_next_collection_label"
+                    android:id="@+id/tvCurrentMY"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Next Collection"
-                    android:textColor="#757575"
+                    android:text="Jul 2025"
+                    android:layout_marginBottom="4dp"
+                    android:textColor="@color/text_sub_grey_600"
                     android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/tv_amount"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="₹12,500"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="#212121"
-                    android:layout_marginTop="2dp" />
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/tv_due_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="due on 5th July"
-                    android:textSize="14sp"
-                    android:textColor="#757575"
-                    android:layout_marginTop="2dp" />
+                    <TextView
+                        android:id="@+id/tvMonthlyAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="View Amount"
+                        android:textSize="16sp"
+                        android:textColor="@color/text_black"/>
+
+                    <ImageView
+                        android:id="@+id/imgViewEye"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginVertical="4dp"
+                        android:src="@drawable/ic_eye_close"/>
+
+
+                </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -182,7 +188,7 @@
             android:id="@+id/tvPropertiesCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Properties"
+            android:text="@string/text_properties"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/black" />
@@ -209,8 +215,6 @@
     </LinearLayout>
 
 
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/propertyListRecycleView"
         android:layout_width="match_parent"
@@ -220,8 +224,10 @@
         android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layoutPropertyHeader" />
+        app:layout_constraintTop_toBottomOf="@id/layoutPropertyHeader"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ProgressBar
         android:id="@+id/progressBarProperties"
@@ -241,7 +247,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="No properties found"
+        android:text="@string/text_no_prop_found"
         android:textSize="16sp"
         android:layout_marginTop="16dp"
         android:visibility="gone"

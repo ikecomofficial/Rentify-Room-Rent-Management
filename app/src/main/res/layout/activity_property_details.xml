@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             app:cardCornerRadius="16dp"
             app:cardElevation="2dp"
-            android:backgroundTint="#F1FAF9"
+            android:backgroundTint="@color/bg_occupancy_layout"
             android:layout_marginHorizontal="2dp"
             app:layout_constraintTop_toBottomOf="@+id/layoutAddress"
             app:layout_constraintStart_toStartOf="parent"
@@ -101,7 +101,7 @@
                         android:text="75%"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="#212121"
+                        android:textColor="@color/black"
                         android:layout_marginTop="4dp" />
 
                     <ProgressBar

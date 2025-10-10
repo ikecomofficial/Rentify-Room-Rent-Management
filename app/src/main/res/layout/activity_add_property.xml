@@ -1,41 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+
+        <TextView
+            android:id="@+id/tvAddPropertySubtitle2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="12dp"
+            android:text="Fill the details to add a property"
+            android:textColor="?attr/colorOnBackground"
+            android:textSize="15sp"
             android:paddingVertical="4dp"
-            android:layout_margin="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add New Property"
-                android:textColor="@color/black"
-                android:textSize="28sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvAddPropertySubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Fill the details to add a property"
-                android:textColor="?attr/colorOnBackground"
-                android:textSize="15sp" />
-
-
-        </LinearLayout>
+            android:paddingHorizontal="12dp"
+            android:layout_margin="10dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -338,4 +325,4 @@
 
         </LinearLayout>
     </LinearLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

@@ -2,11 +2,13 @@ package com.example.rentify_roomrentmanagement;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,8 +36,11 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -44,14 +49,14 @@ public class LoginScreen extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "GoogleSignIn";
-    private EditText etEmail, etPassword, etFullName, etPhoneNumber, etOtpCode;
-    private TextView tvCreateAccount, btnLogin, btnSendOtp, btnVerifyOtp;
+    private long backPressedTime = 0;
+    private EditText etPhoneNumber, etOtpCode;
+    private TextView btnSendOtp;
+    private ProgressBar pbSendOtp;
+    private boolean is_send_otp = true;
     private String verificationId;  // To store OTP verification id
-    private LinearLayout btnGoogleSignIn;
-    private RelativeLayout layoutOtpCode;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseReference;
-    private GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,28 +69,20 @@ public class LoginScreen extends AppCompatActivity {
             return insets;
         });
 
-        etEmail = findViewById(R.id.etEmail);
-        etPassword = findViewById(R.id.etPassword);
-        tvCreateAccount = findViewById(R.id.tvCreateAccount);
-        btnLogin = findViewById(R.id.btnLogin);
-        btnGoogleSignIn = findViewById(R.id.google_sign_in_button);
+        //etEmail = findViewById(R.id.etEmail);
+        //etPassword = findViewById(R.id.etPassword);
+        //tvCreateAccount = findViewById(R.id.tvCreateAccount);
+       // btnLogin = findViewById(R.id.btnLogin);
+        LinearLayout btnGoogleSignIn = findViewById(R.id.google_sign_in_button);
 
         // Phone Login Ids
-        etFullName = findViewById(R.id.etFullName);
         etPhoneNumber = findViewById(R.id.etPhoneNumber);
         etOtpCode = findViewById(R.id.etOtpCode);
-        btnSendOtp = findViewById(R.id.btnSendOtp);
-        btnVerifyOtp = findViewById(R.id.btnVerifyOtp);
-        layoutOtpCode = findViewById(R.id.layoutOtpCode);
+        pbSendOtp = findViewById(R.id.progressOtpLogin);
+        btnSendOtp = findViewById(R.id.btnRequestOtp);
+        // btnVerifyOtp = findViewById(R.id.btnVerifyOtp);
 
         mAuth = FirebaseAuth.getInstance();
-
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signInEmailPassword();
-            }
-        });
 
         btnGoogleSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,31 +91,21 @@ public class LoginScreen extends AppCompatActivity {
             }
         });
 
-        tvCreateAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginScreen.this, SignUpScreen.class);
-                startActivity(intent);
-            }
-        });
-
         // Phone Login Button Clicks
         btnSendOtp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendOTP();
-            }
-        });
-
-        btnVerifyOtp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                verifyOTP();
+                if (is_send_otp){
+                    sendOTP();
+                }else {
+                    verifyOTP();
+                }
             }
         });
 
     }
 
+    /*
     private void signInEmailPassword(){
 
         String user_email = etEmail.getText().toString().trim();
@@ -142,6 +129,9 @@ public class LoginScreen extends AppCompatActivity {
             }
         });
     }
+
+     */
+
     private void signInWithGoogle(){
 
         // Configure Google Sign In
@@ -149,7 +139,7 @@ public class LoginScreen extends AppCompatActivity {
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -243,6 +233,8 @@ public class LoginScreen extends AppCompatActivity {
 
     // Phone Login
     private void sendOTP() {
+
+
         String phone = etPhoneNumber.getText().toString().trim();
 
         if (phone.isEmpty() || phone.length() < 10) {
@@ -250,6 +242,12 @@ public class LoginScreen extends AppCompatActivity {
             etPhoneNumber.requestFocus();
             return;
         }
+
+        // UI updates first
+        btnSendOtp.setText("");
+        pbSendOtp.bringToFront();
+        pbSendOtp.setVisibility(View.VISIBLE);
+        btnSendOtp.setEnabled(false);
 
         // Add country code if not included
         if (!phone.startsWith("+91")) {
@@ -264,7 +262,8 @@ public class LoginScreen extends AppCompatActivity {
                         .setCallbacks(mCallbacks)
                         .build();
 
-        PhoneAuthProvider.verifyPhoneNumber(options);
+        // 👇 Force UI to refresh before Firebase call
+        pbSendOtp.post(() -> PhoneAuthProvider.verifyPhoneNumber(options));
     }
 
     private final PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks =
@@ -282,16 +281,24 @@ public class LoginScreen extends AppCompatActivity {
                 @Override
                 public void onVerificationFailed(@NonNull FirebaseException e) {
                     Toast.makeText(LoginScreen.this, "Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    pbSendOtp.setVisibility(View.GONE);
+                    btnSendOtp.setText(R.string.text_req_otp);
+                    btnSendOtp.setEnabled(true);
+                    is_send_otp = true;
                 }
 
                 @Override
                 public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken token) {
                     super.onCodeSent(s, token);
                     verificationId = s;
-                    //etOtpCode.setVisibility(View.VISIBLE);
-                    layoutOtpCode.setVisibility(View.VISIBLE);
-                    btnVerifyOtp.setVisibility(View.VISIBLE);
-                    btnSendOtp.setVisibility(View.GONE);
+                    pbSendOtp.setVisibility(View.GONE);
+                    btnSendOtp.setText(R.string.text_vrf_otp);
+                    btnSendOtp.setEnabled(true);
+                    is_send_otp = false;
+                    etOtpCode.setVisibility(View.VISIBLE);
+                    //layoutOtpCode.setVisibility(View.VISIBLE);
+                    //btnVerifyOtp.setVisibility(View.VISIBLE);
+                    //btnSendOtp.setVisibility(View.GONE);
                     Toast.makeText(LoginScreen.this, "OTP Sent!", Toast.LENGTH_SHORT).show();
                 }
             };
@@ -321,34 +328,58 @@ public class LoginScreen extends AppCompatActivity {
                         // Save user in Realtime Database if first login
                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
                         String uid = user.getUid();
-                        String userName = etFullName.getText().toString().trim();
-                        if (userName.isEmpty()){
-                            etFullName.setError("Enter Your Name");
-                            return;
-                        }
 
-                        HashMap<String, Object> userMap = new HashMap<>();
+                        ref.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (!snapshot.exists()){
+                                    HashMap<String, Object> userMap = new HashMap<>();
 
-                        userMap.put("name", userName);
-                        userMap.put("email", "null");
-                        userMap.put("user_id", uid);
-                        userMap.put("role", "owner");
-                        userMap.put("profile_url", "default");
-                        userMap.put("thumb_profile_url", "default");
-                        userMap.put("created_at", String.valueOf(System.currentTimeMillis()));
-                        userMap.put("is_verified", String.valueOf(user.isEmailVerified()));
-                        userMap.put("phone", user.getPhoneNumber());
+                                    userMap.put("name", "User");
+                                    userMap.put("email", "null");
+                                    userMap.put("user_id", uid);
+                                    userMap.put("role", "owner");
+                                    userMap.put("profile_url", "default");
+                                    userMap.put("thumb_profile_url", "default");
+                                    userMap.put("created_at", String.valueOf(System.currentTimeMillis()));
+                                    userMap.put("is_verified", String.valueOf(user.isEmailVerified()));
+                                    userMap.put("phone", user.getPhoneNumber());
 
-                        ref.child(uid).updateChildren(userMap);
+                                    ref.child(uid).updateChildren(userMap);
 
-                        // Move to Home Screen
-                        startActivity(new Intent(LoginScreen.this, MainActivity.class));
-                        finish();
+                                    // Move to Home Screen
+                                    startActivity(new Intent(LoginScreen.this, MainActivity.class));
+                                    finish();
+                                }else {
+                                    // Move to Home Screen
+                                    startActivity(new Intent(LoginScreen.this, MainActivity.class));
+                                    finish();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+
 
                     } else {
                         Toast.makeText(LoginScreen.this, "Login Failed", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (SystemClock.elapsedRealtime() - backPressedTime < 2000){
+            super.onBackPressed();
+            return;
+        }else {
+            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
+        }
+        backPressedTime = SystemClock.elapsedRealtime();
     }
 
 }

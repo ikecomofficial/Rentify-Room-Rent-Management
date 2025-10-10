@@ -10,6 +10,8 @@
     <color name="purple_500">#27a59e</color>
     <color name="acc_setting_labels">#505050</color>
 
+
+
     <color name="icon_grey">#666666</color>
 
     <color name="purple_100">#f2fbf9</color>
@@ -19,13 +21,34 @@
     <color name="black_900">#121212</color>
     <color name="black_700">#3d3d3d</color>
     <color name="black_500">#373737</color>
-    <color name="red">#C12929</color>
     <color name="grey_500">#4d4d4d</color>
     <color name="grey_700">#333333</color>
     <color name="light_separator">#D5D5D5</color>
     <color name="green_700_status">#CB5CAF6E</color>
     <color name="toggle_grey">#FF018786</color>
     <color name="bg_light_teal">#E6F5F3</color>
+    <color name="bg_login_layout">#ffffff</color>
 
-    <color name="grey_900">#E4E4E4</color>
+
+    <color name="grey_900">#f1f4f3</color>
+
+    <!-- Heading & Subheading Texts Colors -->
+    <color name="text_black">#000000</color>
+    <color name="text_white">#ffffff</color>
+    <color name="text_red">#c12929</color>
+    <color name="text_sub_grey_600">#5d5d5d</color>
+    <color name="text_sub_grey_900">#3d3d3d</color>
+    <color name="bg_input_grey_50">#f6f6f6</color>
+    <color name="bg_login_google_btn">#ffffff</color>
+
+    <!-- Login Screen Texts Colors -->
+    <color name="text_link_blue">#4889F4</color>
+
+    <!-- Recycler View List Item BG Color -->
+    <color name="bg_list_item">#f7fafa</color>
+
+    <!-- Occupancy Layout Colors (Main & Property Details Activity) -->
+    <color name="bg_occupancy_layout">#e6f9f8</color>
+
+
 </resources>

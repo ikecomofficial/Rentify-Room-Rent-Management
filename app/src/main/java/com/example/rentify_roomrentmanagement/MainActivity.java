@@ -2,9 +2,11 @@ package com.example.rentify_roomrentmanagement;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,11 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,20 +32,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
-    private GoogleSignInClient mGoogleSignInClient;
     private RecyclerView propertyList;
-    private String user_id;
-    private int occupiedSum, totalSum, propertiesItemCount;
-    private CircleImageView cimgUserAccount;
-    private TextView tvNoPropertyList, tvUserName, tvProgressLabel, tvPropertiesCount;
+    private int occupiedSum, totalSum, propertiesItemCount, monthlyAmount = 0;
+    private String curr_my, user_id;
+    private long backPressedTime = 0;
+    private boolean amount_visible = false;
+    private ImageView imgViewEye;
+    private TextView tvNoPropertyList, tvUserName, tvProgressLabel, tvPropertiesCount, tvViewAmount, tvCurrentMY;
     private ProgressBar progressBarProperties, occupancyProgressBar;
-    private MaterialButton btnAddProperty;
-    private DatabaseReference propertiesReference, userReference;
+    private DatabaseReference monthlyRecordsDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,38 +66,66 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+        assert user != null;
+        user_id = user.getUid();
 
-        btnAddProperty = findViewById(R.id.btnAddProperty);
+        MaterialButton btnAddProperty = findViewById(R.id.btnAddProperty);
         progressBarProperties = findViewById(R.id.progressBarProperties);
         tvNoPropertyList = findViewById(R.id.tvNoPropertyList);
         tvUserName = findViewById(R.id.tvUserName);
         tvProgressLabel = findViewById(R.id.tvProgressLabel);
+
+        // View Monthly Collection
+
+        tvViewAmount = findViewById(R.id.tvMonthlyAmount);
+        imgViewEye = findViewById(R.id.imgViewEye);
+        // initially eye closed
+        imgViewEye.setImageResource(R.drawable.ic_eye_close);
+        tvViewAmount.setText("View Amount");
+
+        tvCurrentMY = findViewById(R.id.tvCurrentMY);
+
         tvPropertiesCount = findViewById(R.id.tvPropertiesCount);
         occupancyProgressBar = findViewById(R.id.occupancyProgressBar);
-        cimgUserAccount = findViewById(R.id.cimgUserAccount);
-        propertyList = (RecyclerView) findViewById(R.id.propertyListRecycleView);
+        CircleImageView cimgUserAccount = findViewById(R.id.cimgUserAccount);
+        propertyList = findViewById(R.id.propertyListRecycleView);
         propertyList.setHasFixedSize(true);
         propertyList.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+
+        // Get Current Month Year (Oct 2025)
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy", Locale.getDefault());
+        curr_my = dateFormat.format(date);
+        tvCurrentMY.setText(curr_my);
+
+        //
+
+        // Monthly Rent & Bills Data Reference
+        monthlyRecordsDatabase = FirebaseDatabase.getInstance().getReference().child("monthly_records").child(curr_my).child(user_id);
 
         // Check if the user is already signed in. If not, redirect to LoginScreen.
         if (user == null) {
             goToLoginScreen();
         } else {
-            user_id = user.getUid();
+
             String providerId = user.getProviderId();
             if (providerId.equals("google.com")){
                 // Set UserName on top
                 tvUserName.setText(user.getDisplayName());
                 // Configure Google Sign In to get the client for sign-out
+                /*
+
                 GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestIdToken(getString(R.string.default_web_client_id))
                         .requestEmail()
                         .build();
-                mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+                 */
             }else {
-                userReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_id);
+                DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_id);
                 userReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -129,6 +159,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        imgViewEye.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (!amount_visible){
+                    if (monthlyAmount == 0){
+                        fetchUserMonthlyCollection();
+                    }else {
+                        showMonthlyAmount();
+                    }
+                }else {
+                    // hide amount
+                    tvViewAmount.setText("View Amount");
+                    imgViewEye.setImageResource(R.drawable.ic_eye_close);
+                    amount_visible = false;
+                }
+
+
+            }
+        });
+
     }
     private void goToLoginScreen() {
         Intent intent = new Intent(MainActivity.this, LoginScreen.class);
@@ -143,10 +194,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadPropertiesFromFirebase(){
-        propertiesReference = FirebaseDatabase.getInstance().getReference().child("properties");
-        String userID = FirebaseAuth.getInstance().getUid();
+        DatabaseReference propertiesReference = FirebaseDatabase.getInstance().getReference().child("properties");
 
-        Query userProperties = propertiesReference.orderByChild("user_id").equalTo(userID);
+        Query userProperties = propertiesReference.orderByChild("user_id").equalTo(user_id);
         FirebaseRecyclerOptions<Properties> options = new FirebaseRecyclerOptions.Builder<Properties>()
                 .setQuery(userProperties, Properties.class)
                 .build();
@@ -243,10 +293,42 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void fetchUserMonthlyCollection(){
+        monthlyRecordsDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    int total_rent = snapshot.child("total_rent").getValue(Integer.class);
+                    int total_ebill = snapshot.child("total_ebill").getValue(Integer.class);
+                    monthlyAmount = total_rent + total_ebill;
+                    String total_formatted = "₹" + NumberFormat.getNumberInstance().format(monthlyAmount);;
+                    tvViewAmount.setText(total_formatted);
+                } else {
+                    tvViewAmount.setText("N/A");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        amount_visible = true;
+        imgViewEye.setImageResource(R.drawable.ic_eye_open);
+
+    }
+
+    private void showMonthlyAmount(){
+        String total_amount = "₹" + NumberFormat.getNumberInstance().format(monthlyAmount);
+        tvViewAmount.setText(total_amount);
+        imgViewEye.setImageResource(R.drawable.ic_eye_open);
+        amount_visible = true;
+    }
 
 
 
-    public class PropertiesViewHolder extends RecyclerView.ViewHolder{
+    public static class PropertiesViewHolder extends RecyclerView.ViewHolder{
 
         View mView;
         public PropertiesViewHolder(View itemView){
@@ -282,6 +364,17 @@ public class MainActivity extends AppCompatActivity {
             TextView propertyNameView = mView.findViewById(R.id.tvTotalShops);
             propertyNameView.setText(String.valueOf(totalShops));
         }
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (SystemClock.elapsedRealtime() - backPressedTime < 2000){
+            super.onBackPressed();
+            return;
+        }else {
+            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
+        }
+        backPressedTime = SystemClock.elapsedRealtime();
     }
 
 }

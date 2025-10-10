@@ -32,7 +32,7 @@
         android:textSize="22sp"
         android:textStyle="bold"
         android:text="@string/text_account_setting"
-        android:textColor="?android:textColorPrimary"
+        android:textColor="@color/text_black"
         android:background="?android:colorBackground"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,10 +47,25 @@
         android:layout_marginEnd="8dp"
         android:textAlignment="center"
         android:textSize="16sp"
-        android:text="Name"
-        android:textColor="@color/acc_setting_labels"
+        android:text="@string/text_name_fixed"
+        android:textColor="@color/text_sub_grey_600"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/acc_setting_main_text"/>
+
+
+    <ImageView
+        android:id="@+id/imgNameEdit"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:src="@drawable/ic_edit_name"
+        android:layout_marginTop="26dp"
+        android:layout_marginStart="8dp"
+        android:visibility="gone"
+        android:contentDescription="@string/text_image_desc"
+        app:layout_constraintStart_toEndOf="@id/text_name_label"
+        app:layout_constraintTop_toBottomOf="@id/acc_setting_main_text"
+        app:tint="@color/acc_setting_labels" />
+
 
     <TextView
         android:id="@+id/text_display_name"
@@ -62,9 +77,63 @@
         android:textAlignment="center"
         android:textSize="20sp"
         android:text="@string/text_display_name"
-        android:textColor="?android:textColorPrimary"
+        android:textColor="@color/text_black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_name_label"/>
+
+    <LinearLayout
+        android:id="@+id/layoutEditName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:layout_marginTop="12dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/text_display_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- EditText -->
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etUpdatedName"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:hint="@string/text_name_fixed"
+            android:backgroundTint="@color/grey_700"
+            android:paddingHorizontal="12dp"
+            android:textSize="16sp"
+            android:layout_marginEnd="8dp" />
+
+        <!-- Cancel Button (Outlined) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNameCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:text="@string/text_cancel"
+            android:textColor="@color/grey_500"
+            app:strokeColor="@color/teal_700"
+            app:strokeWidth="2dp"
+            android:textAllCaps="false"
+            app:backgroundTint="@android:color/transparent"
+            app:cornerRadius="8dp"
+            android:layout_marginEnd="8dp"/>
+
+        <!-- Update Button (Filled) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNameUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:text="@string/text_update"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:cornerRadius="8dp"
+            app:backgroundTint="?attr/colorPrimary"/>
+    </LinearLayout>
+
+
+
 
     <TextView
         android:id="@+id/text_email_label"
@@ -75,10 +144,10 @@
         android:layout_marginEnd="8dp"
         android:textAlignment="center"
         android:textSize="16sp"
-        android:text="E-mail/Phone"
-        android:textColor="@color/acc_setting_labels"
+        android:text="@string/text_email_fixed"
+        android:textColor="@color/text_sub_grey_600"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_display_name"/>
+        app:layout_constraintTop_toBottomOf="@id/layoutEditName"/>
 
     <TextView
         android:id="@+id/text_display_email"
@@ -90,7 +159,7 @@
         android:textAlignment="center"
         android:textSize="20sp"
         android:text="@string/text_display_email"
-        android:textColor="?android:textColorPrimary"
+        android:textColor="@color/text_black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_email_label"/>
 
@@ -105,7 +174,7 @@
         android:textAlignment="center"
         android:textSize="20sp"
         android:text="@string/text_logout"
-        android:textColor="@color/red"
+        android:textColor="@color/text_red"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -122,7 +191,7 @@
         android:textAlignment="center"
         android:textSize="14sp"
         android:text="@string/text_app_version"
-        android:textColor="@color/acc_setting_labels"
+        android:textColor="@color/text_sub_grey_600"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

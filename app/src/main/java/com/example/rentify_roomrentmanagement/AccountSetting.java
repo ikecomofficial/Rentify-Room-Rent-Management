@@ -4,6 +4,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +22,8 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,7 +39,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class AccountSetting extends AppCompatActivity {
 
     private TextView tvName, tvEmail, tvBtnSignOut;
-    private CircleImageView cimgProfileImage;
+    private LinearLayout layoutEditName;
+    private ImageView imgNameEdit;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
     private DatabaseReference userReference;
@@ -52,12 +58,20 @@ public class AccountSetting extends AppCompatActivity {
 
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Account Setting");
         }
 
         tvName = findViewById(R.id.text_display_name);
         tvEmail = findViewById(R.id.text_display_email);
-        cimgProfileImage = findViewById(R.id.acc_setting_profile_image);
+        CircleImageView cimgProfileImage = findViewById(R.id.acc_setting_profile_image);
         tvBtnSignOut = findViewById(R.id.text_sign_out_button);
+
+        // Edit Name Views
+        layoutEditName = findViewById(R.id.layoutEditName);
+        MaterialButton btnNameCancel = findViewById(R.id.btnNameCancel);
+        MaterialButton btnNameUpdate = findViewById(R.id.btnNameUpdate);
+        TextInputEditText etUpdatedName = findViewById(R.id.etUpdatedName);
+        imgNameEdit = findViewById(R.id.imgNameEdit);
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
@@ -95,7 +109,7 @@ public class AccountSetting extends AppCompatActivity {
             } else {
                 String user_id = user.getUid();
                 userReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_id);
-                userReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                userReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String user_name = snapshot.child("name").getValue(String.class);
@@ -105,6 +119,12 @@ public class AccountSetting extends AppCompatActivity {
                             tvEmail.setText(user.getPhoneNumber());
                         }else {
                             tvEmail.setText(user.getEmail());
+                        }
+
+                        if (user_name.equals("User")){
+                            imgNameEdit.setVisibility(View.VISIBLE);
+                        }else {
+                            imgNameEdit.setVisibility(View.GONE);
                         }
                     }
 
@@ -122,6 +142,39 @@ public class AccountSetting extends AppCompatActivity {
                 });
             }
         }
+
+        imgNameEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                layoutEditName.setVisibility(View.VISIBLE);
+
+            }
+        });
+        btnNameCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                layoutEditName.setVisibility(View.GONE);
+            }
+        });
+        btnNameUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String new_name = etUpdatedName.getText().toString().trim();
+                if (new_name.isEmpty()){
+                    etUpdatedName.setError("Enter Name");
+                    return;
+                }
+                userReference.child("name").setValue(new_name)
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(AccountSetting.this, "Name updated successfully", Toast.LENGTH_SHORT).show();
+                            layoutEditName.setVisibility(View.GONE);
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(AccountSetting.this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
+
+            }
+        });
     }
 
     private void googleSignOut(){

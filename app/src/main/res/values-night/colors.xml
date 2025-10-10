@@ -17,8 +17,27 @@
     <color name="green_700_status">#80c080</color>
     <color name="toggle_grey">#D9D9D9</color>
 
+
+
     <color name="grey_900">#181A1A</color>
     <color name="bg_light_teal">#334d4d</color>
+    <color name="bg_login_layout">#222531</color>
+
+
+    <!-- Heading & Subheading Texts Colors -->
+    <color name="text_black">#ffffff</color>
+    <color name="text_white">#000000</color>
+    <color name="text_sub_grey_600">#bfbfbf</color>
+    <color name="text_sub_grey_900">#efefef</color>
+
+    <color name="bg_input_grey_50">#3f3f3f</color>
+    <color name="bg_login_google_btn">#3f3f3f</color>
+
+    <!-- Recycler View List Item Colors -->
+    <color name="bg_list_item">#242424</color>
+
+    <!-- Occupancy Layout Colors (Main & Property Details Activity) -->
+    <color name="bg_occupancy_layout">#2b3636</color>
 
 
 </resources>
