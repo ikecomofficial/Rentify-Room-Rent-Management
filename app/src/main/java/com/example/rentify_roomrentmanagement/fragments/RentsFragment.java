@@ -264,8 +264,7 @@ public class RentsFragment extends Fragment {
 
         public void setRentTenantName(String rentTenantName) {
             TextView rentTenantNameView = mView.findViewById(R.id.tvRentTenantName);
-            String displayTenantName = "By: " + rentTenantName;
-            rentTenantNameView.setText(displayTenantName);
+            rentTenantNameView.setText(rentTenantName);
         }
     }
 

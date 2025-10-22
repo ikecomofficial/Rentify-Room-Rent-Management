@@ -43,10 +43,10 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="16dp"
                 android:layout_toEndOf="@+id/tvRoomName"
-                android:background="@drawable/gpt_bg_room_status"
+                android:background="@drawable/bg_occ_status_layout"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="3dp"
-                android:text="Vacant"
+                android:text="@string/text_vac_status"
                 android:textColor="@color/white" />
 
             <TextView
@@ -59,7 +59,8 @@
                 android:layout_toStartOf="@id/tvRoomRent"
                 android:text="@string/text_rupee_symbol"
                 android:textColor="@color/black"
-                android:textSize="21sp" />
+                android:textSize="21sp"
+                tools:ignore="RelativeOverlap" />
 
 
             <TextView
@@ -82,7 +83,8 @@
             android:layout_marginTop="8dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingStart="5dp">
+            android:paddingStart="5dp"
+            android:paddingEnd="0dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imgTenantProfile"
@@ -100,7 +102,7 @@
                     android:id="@+id/tvTenantName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="John Doe"
+                    android:text="@string/text_t_name_ast"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -109,7 +111,7 @@
                     android:id="@+id/tvTenantNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Electricity Bill"
+                    android:text="@string/text_t_mobile_no"
                     android:textColor="#666666"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -120,17 +122,38 @@
                 android:gravity="end"
                 android:orientation="horizontal">
 
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_lightening"
+                    android:layout_gravity="center_vertical"
+                    app:tint="#e9b217" />
+
                 <!-- Paid/Unpaid Status -->
                 <TextView
                     android:id="@+id/tvRentStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="8dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="2dp"
                     android:paddingVertical="4dp"
-                    android:text="@string/text_status_paid"
-                    android:textColor="#4CAF50"
-                    android:textSize="16sp"
+                    android:text="@string/text_units"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/text_sub_grey_600"
+                    android:textSize="14sp"
                     tools:ignore="RelativeOverlap" />
+
+                <TextView
+                    android:id="@+id/tvLastPaidUnit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="8dp"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/text_any_number"
+                    android:textColor="@color/teal_700"
+                    android:textStyle="bold"/>
 
             </LinearLayout>
         </LinearLayout>

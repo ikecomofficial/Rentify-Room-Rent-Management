@@ -11,33 +11,16 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+
+        <TextView
+            android:id="@+id/tvAddPropertySubtitle2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="12dp"
-            android:paddingTop="4dp"
-            android:layout_margin="10dp"
-            android:paddingBottom="4dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Edit Tenant Details"
-                android:textColor="@color/black"
-                android:textSize="28sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvAddPropertySubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Update Your Details"
-                android:textColor="@color/grey_700"
-                android:textSize="15sp" />
-
-
-        </LinearLayout>
+            android:text="@string/text_edit_tenant_details_fixed"
+            android:textColor="@color/text_black"
+            android:textSize="16sp"
+            android:paddingVertical="4dp"
+            android:layout_margin="10dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,7 +29,7 @@
             android:paddingHorizontal="16dp"
             android:paddingTop="16dp"
             android:paddingBottom="30dp"
-            android:background="@drawable/bg_add_prop_form"
+            android:background="@drawable/bg_form_layout"
             android:elevation="4dp"
             android:layout_marginHorizontal="10dp">
 
@@ -55,16 +38,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
-                android:text="Tenant Name *"
+                android:text="@string/text_t_name_ast"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/gpt_edittext_bg">
+                android:background="@drawable/bg_login_input">
 
                 <ImageView
                     android:id="@+id/icon_profile"
@@ -72,6 +55,7 @@
                     android:layout_height="20dp"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
+                    android:contentDescription="@string/text_image_desc"
                     android:src="@drawable/ic_person"
                     app:tint="@color/icon_grey" />
 
@@ -81,10 +65,12 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/icon_profile"
-                    android:background="@drawable/gpt_edittext_bg"
-                    android:hint="Enter Tenant Name"
+                    android:autofillHints="name"
+                    android:background="@drawable/bg_login_input"
+                    android:hint="@string/text_name_fixed"
                     android:inputType="textCapWords"
                     android:padding="10dp"
+                    android:textSize="16sp"
                     android:textColor="@color/black"
                     android:textColorHint="@color/grey_500" />
             </RelativeLayout>
@@ -95,16 +81,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
-                android:text="Mobile No."
+                android:text="@string/text_t_mobile_no"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/gpt_edittext_bg">
+                android:background="@drawable/bg_login_input">
 
                 <ImageView
                     android:id="@+id/icon_phone"
@@ -112,6 +98,7 @@
                     android:layout_height="20dp"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
+                    android:contentDescription="@string/text_image_desc"
                     android:src="@drawable/ic_phone"
                     app:tint="@color/icon_grey" />
 
@@ -121,10 +108,13 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/icon_phone"
-                    android:background="@drawable/gpt_edittext_bg"
-                    android:hint="Enter 10 Digit Number (optional)"
-                    android:inputType="number"
+                    android:autofillHints="phone"
+                    android:background="@drawable/bg_login_input"
+                    android:hint="@string/text_10_digit_no"
+                    android:inputType="phone"
                     android:padding="10dp"
+                    android:textSize="16sp"
+
                     android:textColor="@color/black"
                     android:textColorHint="@color/grey_500" />
             </RelativeLayout>
@@ -136,14 +126,14 @@
                 android:layout_marginBottom="6dp"
                 android:text="@string/text_address_city"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/gpt_edittext_bg">
+                android:background="@drawable/bg_login_input">
 
                 <ImageView
                     android:id="@+id/icon_location"
@@ -151,6 +141,7 @@
                     android:layout_height="20dp"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
+                    android:contentDescription="@string/text_image_desc"
                     android:src="@drawable/ic_home_location"
                     app:tint="@color/icon_grey" />
 
@@ -160,25 +151,31 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/icon_location"
-                    android:background="@drawable/gpt_edittext_bg"
-                    android:hint="Enter Address"
+                    android:autofillHints="postalAddress"
+                    android:background="@drawable/bg_login_input"
+                    android:hint="@string/text_location_fixed"
                     android:inputType="textCapWords"
                     android:padding="10dp"
+                    android:textSize="16sp"
+
                     android:textColor="@color/black"
                     android:textColorHint="@color/grey_500" />
             </RelativeLayout>
 
             <!-- Add Tenant Button -->
-            <TextView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnUpdateTenant"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Update Tenant"
-                android:paddingVertical="10dp"
-                android:textSize="20sp"
-                android:gravity="center"
-                android:textColor="@color/purple_500"
-                android:background="@drawable/gpt_bg_chip"/>
+                android:layout_height="match_parent"
+                android:text="@string/text_update_tenant"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:paddingVertical="14dp"
+                android:textColor="@android:color/white"
+                app:cornerRadius="10dp"
+                app:backgroundTint="@color/teal_700" />
 
 
 

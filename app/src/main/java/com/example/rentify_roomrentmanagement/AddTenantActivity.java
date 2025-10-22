@@ -18,6 +18,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -33,12 +34,9 @@ import java.util.Map;
 public class AddTenantActivity extends AppCompatActivity {
 
     private EditText etTenantName, etTenantPhone, etTenantAddress;
-    private TextView btnAddTenant;
-    private ImageView btnPickContact;
     private static final int PICK_CONTACT = 1001;
     private String user_id, room_id, tenant_id, property_id;
     private boolean is_room;
-    private FirebaseAuth mAuth;
     private DatabaseReference databaseReference, tenantReference, roomReference, propertyReference;
 
     @Override
@@ -53,11 +51,13 @@ public class AddTenantActivity extends AppCompatActivity {
         });
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Add New Tenant");
         }
 
         room_id = getIntent().getStringExtra("room_id");
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+        assert user != null;
         user_id = user.getUid();
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -68,8 +68,8 @@ public class AddTenantActivity extends AppCompatActivity {
         etTenantName = findViewById(R.id.editTextTenantName);
         etTenantPhone = findViewById(R.id.editTextTenantPhone);
         etTenantAddress = findViewById(R.id.editTextTenantAddress);
-        btnAddTenant = findViewById(R.id.btnAddTenant);
-        btnPickContact = findViewById(R.id.btnPickContact);
+        MaterialButton btnAddTenant = findViewById(R.id.btnAddTenant);
+        ImageView btnPickContact = findViewById(R.id.btnPickContact);
 
         btnAddTenant.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,7 +140,7 @@ public class AddTenantActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 property_id = snapshot.child("property_id").getValue(String.class);
-                is_room = snapshot.child("is_room").getValue(Boolean.class);
+                is_room = Boolean.TRUE.equals(snapshot.child("is_room").getValue(Boolean.class));
 
                 // Now Update the occupied Rooms/Shops in PID
                 if (is_room){

@@ -45,7 +45,7 @@ public class RoomCardAdapter extends RecyclerView.Adapter<RoomCardAdapter.RoomVi
     }
 
     public static class RoomViewHolder extends RecyclerView.ViewHolder {
-        TextView tvRoomName, tvRentAmount, tvTenantName, tvTenantPhone, tvRentStatus, tvRoomStatus;
+        TextView tvRoomName, tvRentAmount, tvTenantName, tvTenantPhone, tvLastPaidUnit, tvRoomStatus;
         CircleImageView cimgTenantProfile;
 
         public RoomViewHolder(@NonNull View itemView) {
@@ -56,7 +56,7 @@ public class RoomCardAdapter extends RecyclerView.Adapter<RoomCardAdapter.RoomVi
             tvTenantPhone = itemView.findViewById(R.id.tvTenantNumber);
             cimgTenantProfile = itemView.findViewById(R.id.imgTenantProfile);
             tvRoomStatus = itemView.findViewById(R.id.tvRoomStatus);
-            tvRentStatus = itemView.findViewById(R.id.tvRentStatus);
+            tvLastPaidUnit = itemView.findViewById(R.id.tvLastPaidUnit);
         }
     }
 
@@ -95,14 +95,18 @@ public class RoomCardAdapter extends RecyclerView.Adapter<RoomCardAdapter.RoomVi
             holder.tvRoomStatus.setText("Vacant");
             gradientDrawable.setColor(Color.parseColor("#C0F6695E"));
         }
+        holder.tvLastPaidUnit.setText(String.valueOf(room.getLast_unit_paid()));
 
-        if (Boolean.TRUE.equals(room.isIs_rent_paid())){
+
+        /* if (Boolean.TRUE.equals(room.isIs_rent_paid())){
             holder.tvRentStatus.setText("Paid");
             holder.tvRentStatus.setTextColor(Color.parseColor("#CB5CAF6E"));
         } else {
             holder.tvRentStatus.setText("Unpaid");
             holder.tvRentStatus.setTextColor(Color.parseColor("#C0F6695E"));
         }
+
+         */
 
         // Click on room card - goes to Room Details Activity
         // Set the OnClickListener on the entire item view

@@ -3,15 +3,16 @@ package com.example.rentify_roomrentmanagement;
 public class Rooms {
 
     public String room_id, room_name, tenant_name, tenant_phone, thumb_tenant_url, tenant_id;
-    public int room_rent, room_no;
-    public boolean is_occupied, is_rent_paid;
+    public int room_rent, room_no, last_unit_paid;
+    public boolean is_occupied, is_room;
 
     public Rooms(){
 
     }
 
-    public Rooms(String room_id, String room_name, int room_no, String tenant_id, String tenant_name, String tenant_phone, String thumb_tenant_url,
-                 int room_rent, boolean is_occupied, boolean is_rent_paid) {
+    public Rooms(String room_id, String room_name, int room_no, String tenant_id, String tenant_name,
+                 String tenant_phone, String thumb_tenant_url, int last_unit_paid,
+                 int room_rent, boolean is_occupied, boolean is_room) {
         this.room_id = room_id;
         this.room_name = room_name;
         this.tenant_name = tenant_name;
@@ -20,8 +21,9 @@ public class Rooms {
         this.room_rent = room_rent;
         this.tenant_id = tenant_id;
         this.is_occupied = is_occupied;
-        this.is_rent_paid = is_rent_paid;
+        this.is_room = is_room;
         this.room_no = room_no;
+        this.last_unit_paid = last_unit_paid;
     }
 
     public String getRoom_id() {
@@ -96,11 +98,19 @@ public class Rooms {
         this.is_occupied = is_occupied;
     }
 
-    public boolean isIs_rent_paid() {
-        return is_rent_paid;
+    public int getLast_unit_paid() {
+        return last_unit_paid;
     }
 
-    public void setIs_rent_paid(boolean is_rent_paid) {
-        this.is_rent_paid = is_rent_paid;
+    public void setLast_unit_paid(int last_unit_paid) {
+        this.last_unit_paid = last_unit_paid;
+    }
+
+    public boolean isIs_room() {
+        return is_room;
+    }
+
+    public void setIs_room(boolean is_room) {
+        this.is_room = is_room;
     }
 }

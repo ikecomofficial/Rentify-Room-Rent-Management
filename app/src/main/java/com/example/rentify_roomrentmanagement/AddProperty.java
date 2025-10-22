@@ -17,6 +17,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.widget.NestedScrollView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -32,12 +33,10 @@ public class AddProperty extends AppCompatActivity {
     private int currTotalRooms = 0;
     private int currTotalShops = 0;
 
-    private FirebaseAuth mAuth;
     private String userId;
     private String pid;
     String currTimestamp;
     private DatabaseReference propertyReference;
-    private DatabaseReference roomsReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +75,9 @@ public class AddProperty extends AppCompatActivity {
             getSupportActionBar().setTitle("Add New Property");
         }
 
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+        assert user != null;
         userId = user.getUid();
 
         propertyReference = FirebaseDatabase.getInstance().getReference().child("properties");
@@ -92,7 +92,7 @@ public class AddProperty extends AppCompatActivity {
         ImageView imgShopsMinus = findViewById(R.id.imgShopsMinus);
         textTotalShops = findViewById(R.id.textTotalShops);
         ImageView imgShopsPlus = findViewById(R.id.buttonPlus);
-        TextView btnCreateProperty = findViewById(R.id.btnCreateProperty);
+        MaterialButton btnCreateProperty = findViewById(R.id.btnCreateProperty);
 
         textTotalRooms.setText(String.valueOf(currTotalRooms));
         textTotalShops.setText(String.valueOf(currTotalShops));
@@ -201,7 +201,7 @@ public class AddProperty extends AppCompatActivity {
     }
 
     private void createRoomsShopsInFirebase(){
-        roomsReference = FirebaseDatabase.getInstance().getReference().child("rooms");
+        DatabaseReference roomsReference = FirebaseDatabase.getInstance().getReference().child("rooms");
 
         for (int i = 1; i<= currTotalRooms; i++){
             String room_id = roomsReference.push().getKey();
@@ -222,6 +222,7 @@ public class AddProperty extends AppCompatActivity {
                 // Last month paid monthKey.
                 roomsMap.put("tenant_id","null");
                 roomsMap.put("cm_rent_paid", false);
+                roomsMap.put("last_unit_paid", 0);
                 roomsMap.put("last_rent_month", "2025-07");
 
                 // Add this code while adding and fetching the rent paid status - refer to text file in backup filen folder
@@ -252,6 +253,7 @@ public class AddProperty extends AppCompatActivity {
                 // Last month paid monthKey.
                 roomsMap.put("tenant_id","null");
                 roomsMap.put("cm_rent_paid", false);
+                roomsMap.put("last_unit_paid", 0);
                 roomsMap.put("last_rent_month", "2025-07");
 
                 roomsReference.child(room_id).setValue(roomsMap)

@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,13 +43,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PropertyDetailsActivity extends AppCompatActivity {
 
-    private TextView tvPropertyName, tvPropertyAddress, tvOccupied, tvVacant;
+    private TextView tvPropertyName, tvPropertyAddress, tvOccupied, tvVacant, tvProgressLabel;
     private String property_name, property_address, property_id;
     private long property_default_rent, property_unit_rate;
     private long rooms_occupied, shops_occupied, total_rooms, total_shops;
     private RecyclerView roomsRecyclerView;
     private RoomCardAdapter roomCardAdapter;
     private List<Rooms> roomsList;
+    private ProgressBar occupancyProgressBar;
     private DatabaseReference databaseReference, roomsReference, propertiesReference, tenantReference, rentsReference, e_billReference;
 
     @Override
@@ -68,6 +70,7 @@ public class PropertyDetailsActivity extends AppCompatActivity {
         }
         databaseReference = FirebaseDatabase.getInstance().getReference();
         property_id = getIntent().getStringExtra("property_id");
+
         propertiesReference = databaseReference.child("properties").child(property_id);
         roomsReference = databaseReference.child("rooms");
         tenantReference = databaseReference.child("tenants");
@@ -79,6 +82,8 @@ public class PropertyDetailsActivity extends AppCompatActivity {
         tvOccupied = (TextView) findViewById(R.id.tvOccupiedCount);
         tvVacant = (TextView) findViewById(R.id.tvVacantCount);
         roomsRecyclerView = findViewById(R.id.roomsListRecyclerView);
+        tvProgressLabel = findViewById(R.id.tvProgressLabel);
+        occupancyProgressBar = findViewById(R.id.occupancyProgressBar);
 
         roomsRecyclerView.setHasFixedSize(true);
         roomsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -91,6 +96,8 @@ public class PropertyDetailsActivity extends AppCompatActivity {
             roomDetailsIntent.putExtra("room_id", room.getRoom_id());
             roomDetailsIntent.putExtra("is_occupied", room.isIs_occupied());
             roomDetailsIntent.putExtra("room_name", room.getRoom_name());
+            roomDetailsIntent.putExtra("is_room", room.isIs_room());
+
             startActivity(roomDetailsIntent);
         });
         roomsRecyclerView.setAdapter(roomCardAdapter);
@@ -113,9 +120,12 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                 tvPropertyName.setText(property_name);
                 tvPropertyAddress.setText(property_address);
                 String finalTotalOcc = "Occupied: " + totalRoomShopOcc;
-                String finalTotalVacant = "Vacant: " + totalRoomShop;
+                String finalTotalVacant = "Vacant: " + totalRoomShopVacant;
                 tvOccupied.setText(finalTotalOcc);
                 tvVacant.setText(finalTotalVacant);
+
+                setProgressBarData(totalRoomShopOcc.intValue(), totalRoomShop.intValue());
+
             }
 
             @Override
@@ -125,6 +135,23 @@ public class PropertyDetailsActivity extends AppCompatActivity {
         });
         loadRooms();
     }
+
+    public void setProgressBarData(int occupied, int total) {
+        if (total > 0) {
+            int bar_percentage = (int) ((occupied * 100) / total);
+
+            occupancyProgressBar.setMax(100); // make sure max is 100
+            occupancyProgressBar.setProgress(bar_percentage);
+
+            // Update label
+            String progressLabelPercent = occupied + "/" + total + " Occupied";
+            tvProgressLabel.setText(progressLabelPercent);
+        } else {
+            occupancyProgressBar.setProgress(0);
+            tvProgressLabel.setText("N/A");
+        }
+    }
+
 
     private void loadRooms() {
         roomsReference.orderByChild("property_id").equalTo(property_id)
@@ -137,16 +164,21 @@ public class PropertyDetailsActivity extends AppCompatActivity {
                             String roomId = roomSnap.getKey();
                             String roomName = roomSnap.child("room_name").getValue(String.class);
                             Integer rentAmount = roomSnap.child("room_rent").getValue(Integer.class);
+                            Integer lastUnitPaid = roomSnap.child("last_unit_paid").getValue(Integer.class);
                             Boolean isOccupied = roomSnap.child("is_occupied").getValue(Boolean.class);
                             String tenantId = roomSnap.child("tenant_id").getValue(String.class);
                             Integer roomNo = roomSnap.child("room_no").getValue(Integer.class);
+                            Boolean isRoom = roomSnap.child("is_room").getValue(Boolean.class);
 
                             Rooms model = new Rooms();
                             model.setRoom_id(roomId);
                             model.setRoom_name(roomName);
                             model.setRoom_rent(rentAmount != null ? rentAmount : 0);
+                            model.setLast_unit_paid(lastUnitPaid != null ? lastUnitPaid : 0);
+
                             model.setIs_occupied(isOccupied != null && isOccupied);
                             model.setRoom_no(roomNo != null ? roomNo : 0);
+                            model.setIs_room(isRoom != null && isRoom);
 
                             if (tenantId != null && !tenantId.equals("null") && !tenantId.isEmpty()) {
                                 tenantReference.child(roomId).child(tenantId).addListenerForSingleValueEvent(new ValueEventListener() {

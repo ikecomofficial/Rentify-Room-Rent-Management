@@ -10,32 +10,16 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvAddPropertySubtitle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:text="Enter Electricity Bill Details"
+            android:textColor="@color/text_black"
+            android:textSize="15sp"
             android:paddingHorizontal="12dp"
             android:paddingVertical="4dp"
-            android:layout_margin="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add Electricity Bill"
-                android:textColor="@color/black"
-                android:textSize="28sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvAddPropertySubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Please add electricity bill record"
-                android:textColor="?attr/colorOnBackground"
-                android:textSize="15sp" />
-
-
-        </LinearLayout>
+            android:layout_margin="10dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,7 +38,7 @@
                 android:layout_marginBottom="6dp"
                 android:text="Electricity Bill Entry Mode *"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <!-- Payment Mode Selector -->
@@ -97,14 +81,14 @@
                     android:layout_marginBottom="6dp"
                     android:text="Update Electricity Units *"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginBottom="16dp"
-                    android:background="@drawable/gpt_edittext_bg">
+                    android:background="@drawable/bg_login_input">
 
                     <ImageView
                         android:id="@+id/icon_meter_reading"
@@ -113,7 +97,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginStart="12dp"
                         android:src="@drawable/ic_meter_reading"
-                        app:tint="@color/icon_grey" />
+                        app:tint="@color/text_sub_grey_600" />
 
                     <EditText
                         android:id="@+id/etCurrentMeterReading"
@@ -121,12 +105,12 @@
                         android:layout_height="match_parent"
                         android:layout_marginStart="12dp"
                         android:layout_toEndOf="@id/icon_meter_reading"
-                        android:background="@drawable/gpt_edittext_bg"
+                        android:background="@drawable/bg_login_input"
                         android:hint="Enter Current Meter Reading"
                         android:inputType="number"
                         android:padding="10dp"
                         android:textColor="@color/black"
-                        android:textColorHint="@color/grey_500" />
+                        android:textColorHint="@color/text_sub_grey_600" />
                 </RelativeLayout>
 
             </LinearLayout>
@@ -145,14 +129,14 @@
                     android:layout_marginBottom="6dp"
                     android:text="Electricity Bill Paid *"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginBottom="16dp"
-                    android:background="@drawable/gpt_edittext_bg">
+                    android:background="@drawable/bg_login_input">
 
                     <ImageView
                         android:id="@+id/icon_ebill_amount"
@@ -161,7 +145,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginStart="12dp"
                         android:src="@drawable/ic_rupee_symbol"
-                        app:tint="@color/icon_grey" />
+                        app:tint="@color/text_sub_grey_600" />
 
                     <EditText
                         android:id="@+id/etElcBillAmount"
@@ -169,7 +153,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginStart="12dp"
                         android:layout_toEndOf="@id/icon_ebill_amount"
-                        android:background="@drawable/gpt_edittext_bg"
+                        android:background="@drawable/bg_login_input"
                         android:hint="Enter Bill Amount"
                         android:inputType="number"
                         android:padding="10dp"
@@ -193,14 +177,14 @@
                     android:layout_marginBottom="6dp"
                     android:text="Last Units Paid Upto *"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginBottom="16dp"
-                    android:background="@drawable/gpt_edittext_bg">
+                    android:background="@drawable/bg_login_input">
 
                     <ImageView
                         android:id="@+id/icon_last_paid"
@@ -209,7 +193,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginStart="12dp"
                         android:src="@drawable/ic_meter_reading"
-                        app:tint="@color/icon_grey" />
+                        app:tint="@color/text_sub_grey_600" />
 
                     <EditText
                         android:id="@+id/etElcLastPaidUnit"
@@ -217,7 +201,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginStart="12dp"
                         android:layout_toEndOf="@id/icon_last_paid"
-                        android:background="@drawable/gpt_edittext_bg"
+                        android:background="@drawable/bg_login_input"
                         android:hint="Enter Previous Paid Till Units"
                         android:inputType="number"
                         android:padding="10dp"
@@ -235,7 +219,7 @@
                 android:layout_marginBottom="6dp"
                 android:text="Payment Mode *"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <!-- Payment Mode Selector -->
@@ -273,96 +257,157 @@
                 android:layout_marginBottom="6dp"
                 android:text="Date &amp; Time Of Payment *"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <!-- Row: Text + Toggle -->
-            <LinearLayout
-                android:layout_width="match_parent"
+
+            <RadioGroup
+                android:id="@+id/rgCurrentCustomDT"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="2dp">
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tvCustomDateTime"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Choose Custom Date &amp; Time"
-                    android:textSize="16sp"
-                    android:textColor="@color/grey_700" />
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchCustomDateTime"
+                <RadioButton
+                    android:id="@+id/rbCurrentDateTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:thumbTint="@color/toggle_grey"
-                    android:checked="false" />
+                    android:text="Current Date &amp; Time"
+                    android:checked="true" />
 
-            </LinearLayout>
+                <RadioButton
+                    android:id="@+id/rbCustomDateTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Custom"
+                    android:layout_marginStart="20dp" />
 
-            <!-- Row: Date & Time pickers -->
+            </RadioGroup>
+
+
             <LinearLayout
-                android:id="@+id/layoutDateTime"
+                android:id="@+id/layoutDateTimePicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:weightSum="2"
-                android:visibility="gone">
+                android:paddingHorizontal="16sp"
+                android:paddingVertical="8dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/bg_item_chip_layout"
+                android:gravity="center_vertical">
 
-                <!-- Date Picker -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnCustomDateSelector"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                <!-- Date Section -->
+                <LinearLayout
+                    android:id="@+id/layoutDatePicker"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:strokeColor="@color/bg_orange"
-                    app:strokeWidth="0.5dp"
-                    android:paddingVertical="12dp"
-                    android:textColor="@color/black"
-                    app:icon="@drawable/ic_calendar_start_date2"
-                    app:iconTint="@color/grey_700"
-                    android:textAllCaps="false"
-                    android:text="23 Aug 2025" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-                <!-- Time Picker -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnCustomTimeSelector"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_calendar_start_date2"
+                        app:tint="@color/teal_700"
+                        android:contentDescription="@string/text_image_desc" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Date"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_sub_grey_600" />
+
+                        <TextView
+                            android:id="@+id/tvCustomDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="15 Aug 2024"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:textColor="@color/text_black" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="40dp"
+                    android:layout_marginHorizontal="12dp"
+                    android:background="#E0E0E0" />
+
+                <!-- Time Section -->
+                <LinearLayout
+                    android:id="@+id/layoutTimePicker"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
                     android:layout_weight="1"
-                    app:strokeColor="@color/bg_orange"
-                    app:strokeWidth="0.5dp"
-                    android:paddingVertical="12dp"
-                    android:textColor="@color/black"
-                    app:iconTint="@color/grey_700"
-                    app:icon="@drawable/ic_clock"
-                    android:text="02:15 PM" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_clock"
+                        app:tint="@color/teal_700"
+                        android:contentDescription="@string/text_image_desc" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Time"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_sub_grey_600" />
+
+                        <TextView
+                            android:id="@+id/tvCustomTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="10:00 AM"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:textColor="@color/text_black" />
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
 
+
             <TextView
+                android:id="@+id/tvCurrDateTimeHint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="(By default, current date &amp; time are applied)"
-                android:layout_marginBottom="8dp"
+                android:text="Date &amp; Time Applied."
+                android:layout_marginBottom="4dp"
                 android:layout_marginTop="25dp"/>
-            <!-- Create Property Button -->
-            <TextView
+
+            <!-- Material OTP Button -->
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSaveElcBill"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Save Electricity Bill"
-                android:paddingVertical="10dp"
-                android:textSize="20sp"
-                android:gravity="center"
-                android:textColor="@color/purple_500"
-                android:background="@drawable/gpt_bg_chip"/>
+                android:layout_height="match_parent"
+                android:text="Add E-bill Record"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:paddingVertical="14dp"
+                android:textColor="@android:color/white"
+                app:cornerRadius="10dp"
+                app:backgroundTint="@color/teal_700" />
+
 
         </LinearLayout>
     </LinearLayout>

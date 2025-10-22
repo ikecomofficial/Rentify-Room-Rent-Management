@@ -2,9 +2,7 @@ package com.example.rentify_roomrentmanagement;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -14,6 +12,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +41,7 @@ public class EditProperty extends AppCompatActivity {
         });
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Edit Property");
         }
 
         property_id = getIntent().getStringExtra("property_id");
@@ -58,7 +58,7 @@ public class EditProperty extends AppCompatActivity {
         etPropertyAddress = findViewById(R.id.etUpdatePropertyAddress);
         etDefaultRentAmount = findViewById(R.id.etUpdateDefaultRent);
         etDefaultUnitRate = findViewById(R.id.etUpdateUnitRate);
-        TextView updateProperty = (TextView) findViewById(R.id.btnUpdateProperty);
+        MaterialButton updateProperty = (MaterialButton) findViewById(R.id.btnUpdateProperty);
 
         etPropertyName.setText(property_name);
         etPropertyAddress.setText(property_address);

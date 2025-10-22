@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,11 +44,16 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView propertyList;
     private int occupiedSum, totalSum, propertiesItemCount, monthlyAmount = 0;
-    private String curr_my, user_id;
+    private String user_id;
     private long backPressedTime = 0;
     private boolean amount_visible = false;
     private ImageView imgViewEye;
-    private TextView tvNoPropertyList, tvUserName, tvProgressLabel, tvPropertiesCount, tvViewAmount, tvCurrentMY;
+    private TextView tvNoPropertyList;
+    private TextView tvUserName;
+    private TextView tvProgressLabel;
+    private TextView tvPropertiesCount;
+    private TextView tvViewAmount;
+    private LinearLayout layoutMonthlyAmount;
     private ProgressBar progressBarProperties, occupancyProgressBar;
     private DatabaseReference monthlyRecordsDatabase;
 
@@ -76,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         tvNoPropertyList = findViewById(R.id.tvNoPropertyList);
         tvUserName = findViewById(R.id.tvUserName);
         tvProgressLabel = findViewById(R.id.tvProgressLabel);
+        layoutMonthlyAmount = findViewById(R.id.layoutMonthlyAmount);
 
         // View Monthly Collection
 
@@ -85,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         imgViewEye.setImageResource(R.drawable.ic_eye_close);
         tvViewAmount.setText("View Amount");
 
-        tvCurrentMY = findViewById(R.id.tvCurrentMY);
+        TextView tvCurrentMY = findViewById(R.id.tvCurrentMY);
 
         tvPropertiesCount = findViewById(R.id.tvPropertiesCount);
         occupancyProgressBar = findViewById(R.id.occupancyProgressBar);
@@ -97,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         // Get Current Month Year (Oct 2025)
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy", Locale.getDefault());
-        curr_my = dateFormat.format(date);
+        String curr_my = dateFormat.format(date);
         tvCurrentMY.setText(curr_my);
 
         //
@@ -159,10 +166,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        imgViewEye.setOnClickListener(new View.OnClickListener() {
+        layoutMonthlyAmount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (!amount_visible){
                     if (monthlyAmount == 0){
                         fetchUserMonthlyCollection();
@@ -175,10 +181,9 @@ public class MainActivity extends AppCompatActivity {
                     imgViewEye.setImageResource(R.drawable.ic_eye_close);
                     amount_visible = false;
                 }
-
-
             }
         });
+
 
     }
     private void goToLoginScreen() {
@@ -205,25 +210,6 @@ public class MainActivity extends AppCompatActivity {
                 new FirebaseRecyclerAdapter<Properties, PropertiesViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull PropertiesViewHolder holder, int position, @NonNull Properties model) {
-
-
-                        // Fetch occupancy data
-                        int occupied_rooms = model.getRooms_occupied();
-                        int occupied_shops = model.getShops_occupied();
-                        int total_rooms = model.getTotal_rooms();
-                        int total_shops = model.getTotal_shops();
-
-                        // Property Sums
-                        int propertyOccSum = occupied_rooms + occupied_shops;
-                        int propertyTotalSum = total_rooms + total_shops;
-
-                        // Get Total and Occupied for All Properties Combined
-                        occupiedSum += propertyOccSum;
-                        totalSum += propertyTotalSum;
-
-                        setProgressBarData(occupiedSum, totalSum);
-
-
 
                         // Bind your data here
                         holder.setPropertyName(model.getProperty_name());
@@ -259,6 +245,24 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onDataChanged(){
                         super.onDataChanged();
+
+                        occupiedSum = 0;
+                        totalSum = 0;
+
+                        for (int i = 0; i < getItemCount(); i++) {
+                            Properties model = getItem(i);
+
+                            int propertyOccSum = model.getRooms_occupied() + model.getShops_occupied();
+                            int propertyTotalSum = model.getTotal_rooms() + model.getTotal_shops();
+
+                            occupiedSum += propertyOccSum;
+                            totalSum += propertyTotalSum;
+                        }
+
+                        // Update the progress bar with cumulative totals
+                        setProgressBarData(occupiedSum, totalSum);
+
+
                         progressBarProperties.setVisibility(View.GONE);
                         propertyList.setVisibility(View.VISIBLE);
                         propertiesItemCount = getItemCount();
@@ -285,11 +289,11 @@ public class MainActivity extends AppCompatActivity {
             occupancyProgressBar.setProgress(bar_percentage);
 
             // Update label
-            String progressLabelText = bar_percentage + "%";
-            tvProgressLabel.setText(progressLabelText);
+            String progressLabelPercent = occupied + "/" + total + " Occupied";
+            tvProgressLabel.setText(progressLabelPercent);
         } else {
             occupancyProgressBar.setProgress(0);
-            tvProgressLabel.setText("No Data");
+            tvProgressLabel.setText("N/A");
         }
     }
 

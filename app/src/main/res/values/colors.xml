@@ -3,6 +3,29 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <!-- Primary Colors -->
+    <color name="primary_main">#005564</color>
+    <color name="bg_main_dark">#E1E5E6</color>
+
+    <!-- Text Colors -->
+    <color name="text_heading">#020d10</color>
+    <color name="text_heading_inv">#e3f6f9</color>
+    <color name="text_muted">#3b4b4d</color>
+
+    <!-- Icon Colors -->
+    <color name="icon_primary">#005564</color>
+
+    <!-- Button Colors -->
+    <color name="btn_primary">#005564</color>
+
+    <!-- Information Layout/Card Colors -->
+    <color name="bg_info_layout">#E0F7FB</color>
+
+    <!-- Recycler View List Layout Colors -->
+    <color name="background_list_layout">#f8ffff</color>
+    <color name="border_list_layout">#738486</color>
+
+
     <color name="purple_700">#1b6a68</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
@@ -46,9 +69,21 @@
 
     <!-- Recycler View List Item BG Color -->
     <color name="bg_list_item">#f7fafa</color>
+    <color name="bg_item_chip_border">#1b6a68</color>
 
     <!-- Occupancy Layout Colors (Main & Property Details Activity) -->
     <color name="bg_occupancy_layout">#e6f9f8</color>
+    <color name="bg_occ_status_green_700">#CB5CAF6E</color>
+    <color name="bg_vac_status_red_700">#CB5CAF6E</color>
+
+    <!-- Tenant Info Layout Colors (Room Details Activity) -->
+    <color name="bg_btn_call_blue">#5893f3</color>
+    <color name="bg_btn_wa_green">#4ab565</color>
+
+    <!-- Temporary Main Activity -->
+    <color name="t_bg">#EBF4F5</color>
+    <color name="t_bg_list_item">#F8FFFF</color>
+    <color name="t_bg_list_item_border">#738486</color>
 
 
 </resources>

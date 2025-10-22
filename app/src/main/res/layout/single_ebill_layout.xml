@@ -98,7 +98,7 @@
                 android:id="@+id/tvBillPaidTill"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="200"
+                android:text="@string/text_any_number"
                 android:textColor="@color/teal_700"
                 android:textStyle="bold"
                 android:textSize="18sp"/>
@@ -124,7 +124,6 @@
                 android:layout_height="wrap_content"
                 android:text="40"
                 android:textColor="#10c356"
-                android:textStyle="bold"
                 android:textSize="15sp"/>
 
             <TextView

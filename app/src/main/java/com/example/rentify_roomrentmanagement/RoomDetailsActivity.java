@@ -7,12 +7,15 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +36,9 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,6 +52,7 @@ import com.leinardi.android.speeddial.SpeedDialView;
 
 
 import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -53,11 +60,13 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
     private TextView tvRoomStatus, tvTenantName, tvTenantPhone, tvTenantStartDate, btnAddTenant;
     private CircleImageView cimgTenantProfilePic;
-    private FrameLayout btnCall, btnWhatsApp;
+    private MaterialCardView btnCall, btnWhatsApp;
+    private LinearLayout layoutActions;
     private String room_id, property_id, room_name, tenant_id, tenant_name, tenant_address,
             thumb_tenant_url, tenant_phone, tenant_start_date = "N/A";
-    private boolean is_occupied;
+    private boolean is_occupied, is_room;
     private SpeedDialView addRecordSpeedDial;
+    private ExtendedFloatingActionButton fabAddTenant;
 
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
@@ -82,6 +91,9 @@ public class RoomDetailsActivity extends AppCompatActivity {
         room_id = getIntent().getStringExtra("room_id");
         is_occupied = getIntent().getBooleanExtra("is_occupied", false);
         room_name = getIntent().getStringExtra("room_name");
+        is_room = getIntent().getBooleanExtra("is_room", false);
+        property_id = getIntent().getStringExtra("property_id");
+
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -101,9 +113,11 @@ public class RoomDetailsActivity extends AppCompatActivity {
         tvTenantStartDate = findViewById(R.id.tvStartDate);
         cimgTenantProfilePic = findViewById(R.id.imgProfile);
         btnAddTenant = findViewById(R.id.btnAddTenant);
+        layoutActions = findViewById(R.id.layoutActions);
         btnCall = findViewById(R.id.btnCall);
-        btnWhatsApp = findViewById(R.id.btnWhatsapp);
+        btnWhatsApp = findViewById(R.id.btnWhatsApp);
         addRecordSpeedDial = findViewById(R.id.fabAddRecord);
+        fabAddTenant = findViewById(R.id.fabAddTenant);
 
         // Fragment References
         tabLayout = findViewById(R.id.rentTabLayout);
@@ -139,8 +153,26 @@ public class RoomDetailsActivity extends AppCompatActivity {
             }
         });
 
+        // Keep it expanded initially
+        fabAddTenant.extend();
+
+// Schedule collapse after 10 seconds
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            if (fabAddTenant.isExtended()) {
+                fabAddTenant.shrink();
+            }
+        }, 10_000); // 10 seconds = 10,000 ms
 
         btnAddTenant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent addTenantIntent = new Intent(RoomDetailsActivity.this, AddTenantActivity.class);
+                addTenantIntent.putExtra("room_id", room_id);
+                startActivity(addTenantIntent);
+            }
+        });
+
+        fabAddTenant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent addTenantIntent = new Intent(RoomDetailsActivity.this, AddTenantActivity.class);
@@ -243,18 +275,22 @@ public class RoomDetailsActivity extends AppCompatActivity {
         gradientDrawable = (GradientDrawable) tvRoomStatus.getBackground();
         if (!is_occupied) {
             btnAddTenant.setVisibility(View.VISIBLE);
+            fabAddTenant.setVisibility(View.VISIBLE);
+            layoutActions.setVisibility(View.GONE);
             addRecordSpeedDial.setVisibility(View.GONE);
             btnCall.setVisibility(View.GONE);
             btnWhatsApp.setVisibility(View.GONE);
 
-            tvRoomStatus.setText("Vacant");
+            tvRoomStatus.setText(R.string.text_vac_status);
             gradientDrawable.setColor(Color.parseColor("#C0F6695E"));
         } else {
             addRecordSpeedDial.setVisibility(View.VISIBLE);
+            layoutActions.setVisibility(View.VISIBLE);
             btnAddTenant.setVisibility(View.GONE);
+            fabAddTenant.setVisibility(View.GONE);
             btnCall.setVisibility(View.VISIBLE);
             btnWhatsApp.setVisibility(View.VISIBLE);
-            tvRoomStatus.setText("Occupied");
+            tvRoomStatus.setText(R.string.text_occ_vac_no);
             gradientDrawable.setColor(Color.parseColor("#CB5CAF6E"));
 
             roomReference.addValueEventListener(new ValueEventListener() {
@@ -282,8 +318,10 @@ public class RoomDetailsActivity extends AppCompatActivity {
         builder.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                removeTenantFromRoom();
-                updatePropertyDatabase();
+              removeTenantFromRoom();
+                    // Toast.makeText(RoomDetailsActivity.this, "Error Removing Tenant", Toast.LENGTH_SHORT).show();
+
+
             }
         });
 
@@ -305,44 +343,34 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
     private void removeTenantFromRoom(){
 
-        HashMap<String, Object> tenantRemoveMap = new HashMap<>();
-        tenantRemoveMap.put("is_occupied", false);
-        tenantRemoveMap.put("tenant_id", "null");
-
-        roomReference.updateChildren(tenantRemoveMap).addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "Tenant Removed From Room", Toast.LENGTH_SHORT).show();
-                    finish();
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-
-
         // Add End date to previous tenant id
         String tenantEndDate = new java.text.SimpleDateFormat("dd MMM yyyy", java.util.Locale.US)
                 .format(new java.util.Date());
 
         tenantReference.child(room_id).child(tenant_id).child("tenant_end_date").setValue(tenantEndDate);
 
-    }
-    private void updatePropertyDatabase(){
-        // Get pid from rooms -> rid data
-        roomReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                property_id = snapshot.child("property_id").getValue(String.class);
-                Boolean is_room = snapshot.child("is_room").getValue(Boolean.class);
-                // Now Update the occupied Rooms/Shops in PID
-                if (is_room){
-                    propertyReference.child(property_id).child("rooms_occupied").setValue(ServerValue.increment(-1));
-                }else {
-                    propertyReference.child(property_id).child("shops_occupied").setValue(ServerValue.increment(-1));      }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+        HashMap<String, Object> tenantRemoveMap = new HashMap<>();
+        tenantRemoveMap.put("is_occupied", false);
+        tenantRemoveMap.put("tenant_id", "null");
 
-            }
-        });
+        roomReference.updateChildren(tenantRemoveMap);
+
+        updatePropertyDatabase();
+
     }
+
+    private void updatePropertyDatabase(){
+        // Now Update the occupied Rooms/Shops in PID
+        if (is_room){
+            propertyReference.child(property_id).child("rooms_occupied").setValue(ServerValue.increment(-1));
+            finish();
+        }else {
+            propertyReference.child(property_id).child("shops_occupied").setValue(ServerValue.increment(-1));
+            finish();
+        }
+        Toast.makeText(RoomDetailsActivity.this, "Tenant Removed", Toast.LENGTH_SHORT).show();
+  }
+
 
     private void showBottomSheetTenants(){
         // Create BottomSheetDialog

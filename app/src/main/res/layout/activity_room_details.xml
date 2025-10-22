@@ -36,8 +36,8 @@
                     android:id="@+id/tvTenantInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tenant Information"
-                    android:textColor="@color/black"
+                    android:text="@string/text_tenant_info_fixed"
+                    android:textColor="@color/text_black"
                     android:textSize="17sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -48,10 +48,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
-                    android:background="@drawable/gpt_bg_room_status"
+                    android:background="@drawable/bg_occ_status_layout"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="4dp"
-                    android:text="Vacant"
+                    android:text="@string/text_occ_vac_no"
                     android:textColor="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tvTenantInfo" />
@@ -94,8 +94,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="No Tenant Added"
-                        android:textColor="@color/black"
+                        android:text="@string/text_t_name_ast"
+                        android:textColor="@color/text_black"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toEndOf="@id/imgProfile"
@@ -107,8 +107,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="Click (Add Tenant)"
-                        android:textColor="?android:attr/textColorSecondary"
+                        android:text="@string/text_clk_add_tenant"
+                        android:textColor="@color/text_sub_grey_600"
                         android:textSize="16sp"
                         app:layout_constraintStart_toEndOf="@id/imgProfile"
                         app:layout_constraintTop_toBottomOf="@id/tvTenantName" />
@@ -117,12 +117,15 @@
                         android:id="@+id/btnAddTenant"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/gpt_bg_chip"
+                        android:background="@drawable/bg_item_chip_layout"
                         android:paddingHorizontal="12dp"
                         android:paddingVertical="8dp"
-                        android:text="+ Add Tenant"
-                        android:textColor="@color/purple_500"
+                        android:text="@string/text_add_tenant"
+                        android:textColor="@color/teal_700"
                         android:textSize="15sp"
+                        android:drawablePadding="4dp"
+                        app:drawableStartCompat="@drawable/ic_input_plus"
+                        app:drawableTint="@color/teal_700"
                         app:layout_constraintBottom_toBottomOf="@id/tvTenantPhone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@id/tvTenantName" />
@@ -144,8 +147,9 @@
                             android:id="@+id/imgDateIcon"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
+                            android:contentDescription="@string/text_image_desc"
                             android:src="@drawable/ic_calendar_start_date2"
-                            app:tint="@color/black" />
+                            app:tint="@color/text_black" />
 
                         <!-- Start Date -->
                         <TextView
@@ -153,8 +157,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:text="Start:"
-                            android:textColor="@color/black"
+                            android:text="@string/text_tenant_start_fixed"
+                            android:textColor="@color/text_black"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
@@ -163,49 +167,87 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
-                            android:text="N/A"
-                            android:textColor="?android:attr/textColorSecondary"
+                            android:text="@string/text_na_fixed"
+                            android:textColor="@color/text_sub_grey_600"
                             android:textSize="14sp" />
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/layoutActions"
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        app:layout_constraintTop_toBottomOf="@id/tvTenantPhone"
+                        app:layout_constraintEnd_toEndOf="parent">
 
-                    <!-- Left Icon Circle -->
-                    <FrameLayout
-                        android:id="@+id/btnCall"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/gpt_bg_circle"
-                        android:gravity="center"
-                        app:layout_constraintEnd_toStartOf="@id/btnWhatsapp"
-                        app:layout_constraintTop_toBottomOf="@id/tvTenantPhone">
-
-                        <ImageView
+                        <!-- Call Button -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/btnCall"
                             android:layout_width="wrap_content"
-                            android:layout_height="32dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_phone"
-                            app:tint="@color/black" />
-                    </FrameLayout>
-                    <!-- Left Icon Circle -->
-                    <FrameLayout
-                        android:id="@+id/btnWhatsapp"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_marginEnd="4dp"
-                        android:background="@drawable/gpt_bg_circle"
-                        android:gravity="center"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvTenantPhone" >
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="6dp"
+                            app:cardCornerRadius="25dp"
+                            app:cardBackgroundColor="@color/bg_btn_call_blue">
 
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/ic_whatsapp"
-                            app:tint="@color/black"
-                            android:layout_gravity="center"/>
-                    </FrameLayout>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                android:paddingHorizontal="12dp">
+
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:src="@drawable/ic_phone"
+                                    app:tint="@android:color/white" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="5dp"
+                                    android:text="Call"
+                                    android:textStyle="bold"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="15sp" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- WhatsApp Button -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/btnWhatsApp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            app:cardCornerRadius="25dp"
+                            app:cardBackgroundColor="@color/bg_btn_wa_green">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                android:paddingHorizontal="12dp">
+
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:src="@drawable/ic_whatsapp"
+                                    app:tint="@android:color/white" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="5dp"
+                                    android:text="WA"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="15sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
@@ -228,13 +270,13 @@
                     android:id="@+id/tab_rents"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Room Rents"/>
+                    android:text="@string/text_tab_room_rents_fixed"/>
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/tab_bills"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Electricity Bills" />
+                    android:text="@string/text_tab_elc_bills_fixed" />
 
             </com.google.android.material.tabs.TabLayout>            <!-- 🆕 TabLayout + ViewPager2 -->
 
@@ -249,14 +291,37 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabAddTenant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_add_tenant"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:icon="@drawable/ic_add_user"
+        app:iconTint="@color/white"
+        android:backgroundTint="@color/teal_700"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:iconPadding="8dp"
+        app:iconGravity="start"
+        app:layout_constraintBottom_toTopOf="@id/fabAddRecord"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <com.leinardi.android.speeddial.SpeedDialView
         android:id="@+id/fabAddRecord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:sdMainFabOpenedSrc="@drawable/ic_input_minus"
         app:sdMainFabClosedSrc="@drawable/ic_input_plus"
+        app:sdMainFabClosedBackgroundColor="@color/teal_700"
+        app:sdMainFabOpenedBackgroundColor="@color/teal_700"
+        app:sdMainFabClosedIconColor="@color/white"
+        app:sdMainFabOpenedIconColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

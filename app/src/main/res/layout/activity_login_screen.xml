@@ -93,6 +93,7 @@
                 android:layout_height="50dp"
                 android:hint="@string/text_otp_code"
                 android:drawableStart="@drawable/ic_otpkey"
+                android:drawableTint="@color/text_sub_grey_600"
                 android:drawablePadding="10dp"
                 android:background="@drawable/bg_login_input"
                 android:padding="10dp"
@@ -104,7 +105,7 @@
             <!-- OTP Button with Circular Loader -->
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="58dp"
                 android:layout_marginBottom="16dp">
 
                 <!-- Material OTP Button -->

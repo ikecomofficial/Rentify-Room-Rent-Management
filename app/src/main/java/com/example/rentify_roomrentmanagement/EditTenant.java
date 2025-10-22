@@ -12,6 +12,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -20,7 +21,7 @@ import java.util.HashMap;
 public class EditTenant extends AppCompatActivity {
 
     private EditText etTenantName, etTenantPhone, etTenantAddress;
-    private String room_id, tenant_id, tenant_name, tenant_phone, tenant_address;
+    private String tenant_name, tenant_phone, tenant_address;
     private DatabaseReference tenantReference;
 
     @Override
@@ -35,20 +36,23 @@ public class EditTenant extends AppCompatActivity {
         });
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Edit Tenant");
         }
-        room_id = getIntent().getStringExtra("room_id");
-        tenant_id = getIntent().getStringExtra("tenant_id");
+        String room_id = getIntent().getStringExtra("room_id");
+        String tenant_id = getIntent().getStringExtra("tenant_id");
         tenant_name = getIntent().getStringExtra("tenant_name");
         tenant_phone = getIntent().getStringExtra("tenant_phone");
         tenant_address = getIntent().getStringExtra("tenant_address");
 
+        assert room_id != null;
+        assert tenant_id != null;
         tenantReference = FirebaseDatabase.getInstance().getReference().child("tenants")
                 .child(room_id).child(tenant_id);
 
         etTenantName = findViewById(R.id.etEditTenantName);
         etTenantPhone = findViewById(R.id.etEditTenantPhone);
         etTenantAddress = findViewById(R.id.etEditTenantAddress);
-        TextView updateTenant = (TextView) findViewById(R.id.btnUpdateTenant);
+        MaterialButton updateTenant = (MaterialButton) findViewById(R.id.btnUpdateTenant);
 
         etTenantName.setText(tenant_name);
         etTenantPhone.setText(tenant_phone);

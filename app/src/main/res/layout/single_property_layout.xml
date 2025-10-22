@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/gpt_bg_property_card"
+    android:background="@drawable/background_list_layout"
     android:elevation="3dp"
     android:weightSum="10"
     android:layout_margin="6dp"
@@ -82,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="@drawable/gpt_bg_chip"
+                android:background="@drawable/bg_item_chip_layout"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="5dp"
                 android:layout_marginEnd="6dp">
@@ -139,7 +139,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="@drawable/gpt_bg_chip"
+                android:background="@drawable/bg_item_chip_layout"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="5dp">
 

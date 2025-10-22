@@ -2,14 +2,14 @@
     android:shape="rectangle">
 
     <!-- Background white -->
-    <solid android:color="@color/bg_list_item" />
+    <solid android:color="@color/background_list_layout" />
 
     <!-- Rounded corners -->
     <corners android:radius="12dp" />
 
     <!-- Shiny stroke -->
     <stroke
-        android:width="0.4dp"
-        android:color="@color/teal_700" /> <!-- 50% transparent light teal -->
+        android:width="0.6dp"
+        android:color="@color/border_list_layout" />
 
 </shape>

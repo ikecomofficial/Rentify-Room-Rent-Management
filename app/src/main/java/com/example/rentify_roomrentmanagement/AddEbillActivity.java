@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +18,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.database.DataSnapshot;
@@ -32,14 +35,17 @@ import java.util.Locale;
 public class AddEbillActivity extends AppCompatActivity {
 
     private EditText etCurrentReading, etElcBillAmount, etElcLastPaidTill;
-    private TextView btnSaveElcBill;
+    private TextView tvCustomDate, tvCustomTime, tvCurrDateTimeHint;
+    private MaterialButton btnSaveElcBill;
     private LinearLayout layoutLastPaidUnit, layoutElcBillAmount, layoutElcUnitPaid;
     private MaterialButtonToggleGroup tgPaymentMode, tgElcBillMode;
     private String room_id, tenant_id, ebill_id, paymentMode = "Cash", elcBillAmount, unitPaidUpTo;
     private String ebill_date, ebill_time, ebill_timestamp;
     private Integer last_paid_upto = -1, elc_unit_rate = 0, units_used = 0, elc_bill_amount = 0, units_paid_upto = 0;
     private boolean isByUnits = true, isFirstRecord = true;
-    private SwitchMaterial smCustomDateTime;
+    private Calendar calendar;
+    private RadioGroup rgCurrentCustomDT;
+    private LinearLayout layoutDateTimePicker, layoutDatePicker, layoutTimePicker;
     private DatabaseReference databaseReference, roomReference, tenantReference, elcBillReference;
 
     @Override
@@ -55,6 +61,7 @@ public class AddEbillActivity extends AppCompatActivity {
 
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Add Electricity Bill");
         }
 
         room_id = getIntent().getStringExtra("room_id");
@@ -74,8 +81,19 @@ public class AddEbillActivity extends AppCompatActivity {
         btnSaveElcBill = findViewById(R.id.btnSaveElcBill);
         tgElcBillMode = findViewById(R.id.toggleElcBillMode);
         tgPaymentMode = findViewById(R.id.togglePaymentMode);
-        smCustomDateTime = findViewById(R.id.switchCustomDateTime);
 
+        rgCurrentCustomDT = findViewById(R.id.rgCurrentCustomDT);
+
+        tvCustomDate = findViewById(R.id.tvCustomDate);
+        tvCustomTime = findViewById(R.id.tvCustomTime);
+
+        layoutDateTimePicker = findViewById(R.id.layoutDateTimePicker);
+        layoutDatePicker = findViewById(R.id.layoutDatePicker);
+        layoutTimePicker = findViewById(R.id.layoutTimePicker);
+        layoutDateTimePicker.setVisibility(View.GONE);
+        tvCurrDateTimeHint = findViewById(R.id.tvCurrDateTimeHint);
+
+        calendar = Calendar.getInstance();
         if (fetchLastPaidUnitFirebase()){
             fetchElcUnitRate();
         }
@@ -111,13 +129,30 @@ public class AddEbillActivity extends AppCompatActivity {
         });
 
         setCurrentDateTime();
-        smCustomDateTime.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                showDateTimePicker();
-            } else {
+
+        rgCurrentCustomDT.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.rbCurrentDateTime) {
+                // Current selected
+                layoutDateTimePicker.setVisibility(View.GONE);
                 setCurrentDateTime();
+            } else if (checkedId == R.id.rbCustomDateTime) {
+                // Custom selected
+                layoutDateTimePicker.setVisibility(View.VISIBLE);
+                displayCurrDateTime();
+                tvCurrDateTimeHint.setText("Custom Date & Time Applied.");
             }
         });
+
+        // 1️⃣ Click on Date Layout (Date + Time)
+        layoutDatePicker.setOnClickListener(v -> {
+            showDateTimePicker();
+        });
+
+        // 2️⃣ Click on Time Layout (Time Only)
+        layoutTimePicker.setOnClickListener(v -> {
+            showTimePicker();
+        });
+
 
         btnSaveElcBill.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,8 +205,24 @@ public class AddEbillActivity extends AppCompatActivity {
             }
         });
     }
+
+    // Helper method to update TextViews
+    private void updateDateTimeViews(Calendar cal) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+
+        tvCustomDate.setText(dateFormat.format(cal.getTime()));
+        tvCustomTime.setText(timeFormat.format(cal.getTime()));
+    }
+
+    // Helper method to get timestamp
+    private String getTimestamp(Calendar cal) {
+        return String.valueOf(cal.getTimeInMillis());
+    }
+
+
+    // Get current date & time
     private void setCurrentDateTime() {
-        /*Calendar calendar = Calendar.getInstance();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
         SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
@@ -179,49 +230,82 @@ public class AddEbillActivity extends AppCompatActivity {
         ebill_date = dateFormat.format(calendar.getTime());
         ebill_time = timeFormat.format(calendar.getTime());
 
-         */
+        String currDateTime = "Date & Time Applied: " + ebill_date + ", " + ebill_time;
+        tvCurrDateTimeHint.setText(currDateTime);
+
         ebill_timestamp = String.valueOf(System.currentTimeMillis());
+    }
+
+    private void displayCurrDateTime(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+
+        ebill_date = dateFormat.format(calendar.getTime());
+        ebill_time = timeFormat.format(calendar.getTime());
+
+        tvCustomDate.setText(ebill_date);
+        tvCustomTime.setText(ebill_time);
+
     }
 
     // Show picker dialogs
     private void showDateTimePicker() {
-        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        // Date Picker
-        DatePickerDialog datePicker = new DatePickerDialog(this,
-                (view, year, month, dayOfMonth) -> {
-                    Calendar pickedDateTime = Calendar.getInstance();
-                    pickedDateTime.set(year, month, dayOfMonth);
-
-                    //SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
-                    //rent_date = dateFormat.format(pickedDateTime.getTime());
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                AddEbillActivity.this,
+                (view, selectedYear, selectedMonth, selectedDay) -> {
+                    calendar.set(Calendar.YEAR, selectedYear);
+                    calendar.set(Calendar.MONTH, selectedMonth);
+                    calendar.set(Calendar.DAY_OF_MONTH, selectedDay);
 
                     // After date, show time picker
-                    TimePickerDialog timePicker = new TimePickerDialog(this,
-                            (timeView, hourOfDay, minute) -> {
-                                pickedDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                                pickedDateTime.set(Calendar.MINUTE, minute);
-                                pickedDateTime.set(Calendar.SECOND, 0);
-                                pickedDateTime.set(Calendar.MILLISECOND, 0);
+                    int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                    int minute = calendar.get(Calendar.MINUTE);
 
-                                //SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-                                //rent_time = timeFormat.format(pickedDateTime.getTime());
+                    TimePickerDialog timePickerDialog = new TimePickerDialog(
+                            AddEbillActivity.this,
+                            (timeView, selectedHour, selectedMinute) -> {
+                                calendar.set(Calendar.HOUR_OF_DAY, selectedHour);
+                                calendar.set(Calendar.MINUTE, selectedMinute);
 
-                                // If you want it as String
-                                ebill_timestamp = String.valueOf(pickedDateTime.getTimeInMillis());
+                                // Update TextViews
+                                updateDateTimeViews(calendar);
 
-                            },
-                            calendar.get(Calendar.HOUR_OF_DAY),
-                            calendar.get(Calendar.MINUTE),
-                            false);
+                                // Get final timestamp
+                                ebill_timestamp = getTimestamp(calendar);
 
-                    timePicker.show();
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH));
+                            }, hour, minute, false // false for 12-hour format
+                    );
+                    timePickerDialog.show();
 
-        datePicker.show();
+                }, year, month, day
+        );
+        datePickerDialog.show();
+    }
+
+    private void showTimePicker(){
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(
+                AddEbillActivity.this,
+                (timeView, selectedHour, selectedMinute) -> {
+                    calendar.set(Calendar.HOUR_OF_DAY, selectedHour);
+                    calendar.set(Calendar.MINUTE, selectedMinute);
+
+                    // Update only Time TextView
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+                    tvCustomTime.setText(timeFormat.format(calendar.getTime()));
+
+                    // Update timestamp
+                    ebill_timestamp = getTimestamp(calendar);
+
+                }, hour, minute, false
+        );
+        timePickerDialog.show();
     }
 
     private void saveElcBillToFirebase(){

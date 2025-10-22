@@ -19,9 +19,8 @@
     <string name="text_0">0</string>
     <string name="text_total_shops">Total Shops *</string>
     <string name="text_total_rooms">Total Rooms *</string>
-    <string name="text_create_property">Create Property</string>
     <string name="text_electricity_unit_rate">Electricity Unit Rate *</string>
-    <string name="text_room_01">Room 01</string>
+
     <string name="text_rupee_symbol">₹</string>
     <string name="text_rent_2500">2,500</string>
     <string name="text_tenant_name">Tenant Name</string>
@@ -38,6 +37,7 @@
     <string name="text_name">Rahul Kumar</string>
     <string name="text_occupancy">Total Occupancy</string>
     <string name="text_some_percentage">0%</string>
+    <string name="text_view_amount">View Amount</string>
     <string name="text_properties">Properties</string>
     <string name="text_no_prop_found">No Properties Found</string>
 
@@ -70,6 +70,44 @@
     <string name="text_email_fixed">E-mail/Phone</string>
     <string name="text_cancel">Cancel</string>
     <string name="text_update">Update</string>
+
+    <!-- Add & Edit Property Screen Strings -->
+    <string name="text_enter_p_details_fixed">Enter the details to get started.</string>
+    <string name="text_update_p_details_fixed">Update your Property details below.</string>
+    <string name="text_p_name_ast">Property Name *</string>
+    <string name="text_p_address_ast">Address/City *</string>
+    <string name="text_total_rooms_ast">Total Rooms *</string>
+    <string name="text_total_shops_ast">Total Shops *</string>
+    <string name="text_p_month_rent_ast">Monthly Rent *</string>
+    <string name="text_location_fixed">Location</string>
+    <string name="text_rent_amount_fixed">Rent Amount</string>
+    <string name="text_elc_rate_ast">Electricity Unit Rate *</string>
+    <string name="text_elc_unit_rate">₹ per unit</string>
+    <string name="text_create_property">Create New Property</string>
+    <string name="text_update_property">Update Property</string>
+
+    <!-- Add & Edit Tenant Screen Strings -->
+    <string name="text_add_tenant_detail_fixed">Enter Tenant details to get started.</string>
+    <string name="text_edit_tenant_details_fixed">Update your Tenant details below.</string>
+    <string name="text_add_tenant">Add Tenant</string>
+    <string name="text_update_tenant">Update Tenant</string>
+
+    <string name="text_t_name_ast">Tenant Name *</string>
+    <string name="text_t_mobile_no">Mobile No. (Optional)</string>
+    <string name="text_10_digit_no">Enter 10 Digit Number</string>
+
+    <!-- Property & Room Details Screen Strings -->
+    <string name="text_occ_vac_no">Occupied</string>
+    <string name="text_vac_status">Vacant</string>
+    <string name="text_tenant_start_fixed">Start:</string>
+    <string name="text_rooms_shops_fixed">Rooms &amp; Shops</string>
+    <string name="text_tenant_info_fixed">Tenant Information</string>
+    <string name="text_na_fixed">N/A</string>
+    <string name="text_tab_room_rents_fixed">Room Rents</string>
+    <string name="text_tab_elc_bills_fixed">Electricity Bills</string>
+    <string name="text_room_01">Room 01</string>
+    <string name="text_clk_add_tenant">Click (Add Tenant)</string>
+    <string name="text_units">Units:</string>
 
 
 
